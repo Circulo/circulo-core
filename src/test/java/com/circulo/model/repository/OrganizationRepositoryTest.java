@@ -32,26 +32,110 @@ public class OrganizationRepositoryTest {
     private OrganizationRepository organizationRepository;
 
     @Test
-    public void testCreateOrganization() {
+    public void testCreate() {
 
-//        Assert.assertTrue(false);
+        Organization org = generateOrg();
+        organizationRepository.save(org);
+
+        Query query = new Query(Criteria.where("_id").is(org.getId()));
+        List<Organization> orgs = mongoTemplate.find(query, Organization.class);
+
+        Assert.assertEquals(1, orgs.size());
+        Assert.assertEquals(org.getId(), orgs.get(0).getId());
+        Assert.assertEquals(org.getName(), orgs.get(0).getName());
+        Assert.assertEquals(org.getDescription(), orgs.get(0).getDescription());
+    }
+
+    @Test
+    public void testFind() {
+
+        Organization org = generateOrg();
+        organizationRepository.save(org);
+
+        Organization copy = organizationRepository.findOne(org.getId());
+        Assert.assertEquals(org.getId(), copy.getId());
+        Assert.assertEquals(org.getName(), copy.getName());
+        Assert.assertEquals(org.getDescription(), copy.getDescription());
+    }
+
+    @Test
+    public void testUpdate() {
+
+        Organization org = generateOrg();
+        organizationRepository.save(org);
+
+        Organization copy = organizationRepository.findOne(org.getId());
+        Assert.assertEquals(org.getId(), copy.getId());
+        Assert.assertEquals(org.getName(), copy.getName());
+        Assert.assertEquals(org.getDescription(), copy.getDescription());
+
+        org.setName(UUID.randomUUID().toString());
+        org.setDescription(UUID.randomUUID().toString());
+        organizationRepository.save(org);
+
+        copy = organizationRepository.findOne(org.getId());
+        Assert.assertEquals(org.getId(), copy.getId());
+        Assert.assertEquals(org.getName(), copy.getName());
+        Assert.assertEquals(org.getDescription(), copy.getDescription());
+    }
+
+    @Test
+    public void testDelete() {
+
+        Organization org = generateOrg();
+        organizationRepository.save(org);
+
+        Organization copy = organizationRepository.findOne(org.getId());
+        Assert.assertEquals(org.getId(), copy.getId());
+        Assert.assertEquals(org.getName(), copy.getName());
+        Assert.assertEquals(org.getDescription(), copy.getDescription());
+
+        organizationRepository.delete(org);
+        copy = organizationRepository.findOne(org.getId());
+        Assert.assertNull(copy);
+    }
+
+    @Test
+    public void testFindByName() {
+
+        Organization org = generateOrg();
+        organizationRepository.save(org);
+
+        List<Organization> orgs = organizationRepository.findOrganizationByName(org.getName());
+        Assert.assertEquals(1, orgs.size());
+
+        Organization copy = orgs.get(0);
+        Assert.assertEquals(org.getId(), copy.getId());
+        Assert.assertEquals(org.getName(), copy.getName());
+        Assert.assertEquals(org.getDescription(), copy.getDescription());
+    }
+
+    @Test
+    public void testFindByDesc() {
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        Organization org = generateOrg();
+        organizationRepository.save(org);
+
+        List<Organization> orgs = organizationRepository.findByDescription(org.getDescription());
+        Assert.assertEquals(1, orgs.size());
+    }
+
+    private Organization generateOrg() {
 
         String dateStr = DateFormat.getIso8061(new Date());
 
         Organization organization = new Organization();
         organization.setId(UUID.randomUUID().toString());
-        organization.setName("blah blah");
+        organization.setName(UUID.randomUUID().toString());
         organization.setDescription(dateStr);
 
-        organizationRepository.save(organization);
-
-        Query query = new Query(Criteria.where("_id").is(organization.getId()));
-        List<Organization> orgs = mongoTemplate.find(query, Organization.class);
-
-        Assert.assertEquals(1, orgs.size());
-        Assert.assertEquals(organization.getId(), orgs.get(0).getId());
-        Assert.assertEquals(organization.getName(), orgs.get(0).getName());
-        Assert.assertEquals(organization.getDescription(), orgs.get(0).getDescription());
+        return organization;
     }
 }
 

@@ -1,9 +1,8 @@
 package com.circulo.model.repository;
 
 import com.circulo.model.Organization;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.mongodb.repository.Query;
 
 import java.util.List;
 
@@ -13,5 +12,8 @@ import java.util.List;
 public interface OrganizationRepository
     extends MongoRepository<Organization, String> {
 
-    public List<Organization> findUsersById(String id);
+    @Query("{ 'name' : ?0 }")
+    public List<Organization> findOrganizationByName(String name);
+
+    public List<Organization> findByDescription(String description);
 }

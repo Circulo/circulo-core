@@ -1,10 +1,13 @@
-name := """common"""
+name := """circulo-core"""
 
 version := "1.0.0-SNAPSHOT"
 
 scalaVersion := "2.11.4"
 
 val springVersion = "4.0.7.RELEASE"
+
+//include conf directory for testing
+unmanagedClasspath in Test += baseDirectory.value / "conf"
 
 dependencyOverrides ++= Set(
   "org.springframework" % "spring-test" % springVersion,
@@ -49,5 +52,6 @@ libraryDependencies ++= Seq(
   "com.google.code.gson" % "gson" % "2.3.1",
   "com.google.guava" % "guava" % "18.0",
   "javax.validation" % "validation-api" % "1.1.0.Final",
-  "com.novocode" % "junit-interface" % "0.11" % "test"
+  "com.novocode" % "junit-interface" % "0.11" % "test",
+  "ch.qos.logback" % "logback-classic" % "1.1.3"
 )
