@@ -15,6 +15,9 @@ public class Product {
     @Id
     private String id;
 
+    @DBRef
+    private Organization organization;
+
     private String name;
 
     @DBRef
@@ -39,6 +42,14 @@ public class Product {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
     }
 
     public String getName() {

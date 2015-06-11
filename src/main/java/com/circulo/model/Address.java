@@ -5,22 +5,32 @@ package com.circulo.model;
  */
 public class Address {
 
-    private String postalAddress;
+    private String postalAddress1;
+
+    private String postalAddress2;
 
     private String city;
 
-    private String zipCode;
+    private String postalCode;
 
     private String state;
 
     private String country;
 
-    public String getPostalAddress() {
-        return postalAddress;
+    public String getPostalAddress1() {
+        return postalAddress1;
     }
 
-    public void setPostalAddress(String postalAddress) {
-        this.postalAddress = postalAddress;
+    public void setPostalAddress1(String postalAddress1) {
+        this.postalAddress1 = postalAddress1;
+    }
+
+    public String getPostalAddress2() {
+        return postalAddress2;
+    }
+
+    public void setPostalAddress2(String postalAddress2) {
+        this.postalAddress2 = postalAddress2;
     }
 
     public String getCity() {
@@ -31,12 +41,12 @@ public class Address {
         this.city = city;
     }
 
-    public String getZipCode() {
-        return zipCode;
+    public String getPostalCode() {
+        return postalCode;
     }
 
-    public void setZipCode(String zipCode) {
-        this.zipCode = zipCode;
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
     }
 
     public String getState() {

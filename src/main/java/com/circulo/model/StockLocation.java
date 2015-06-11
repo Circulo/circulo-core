@@ -4,14 +4,11 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 /**
- * Created by tfulton on 6/10/15.
+ * Created by tfulton on 6/11/15.
  */
-@Document(collection = "stock_summary_snapshot")
-public class StockSummarySnapshot {
+@Document(collection = "stock_location")
+public class StockLocation {
 
     @Id
     private String id;
@@ -19,9 +16,11 @@ public class StockSummarySnapshot {
     @DBRef
     private Organization organization;
 
-    private List<StockItem> stockItems;
+    private String name;
 
-    private LocalDateTime calculatedAt;
+    private String description;
+
+    private Address address;
 
     public String getId() {
         return id;
@@ -39,19 +38,27 @@ public class StockSummarySnapshot {
         this.organization = organization;
     }
 
-    public List<StockItem> getStockItems() {
-        return stockItems;
+    public String getName() {
+        return name;
     }
 
-    public void setStockItems(List<StockItem> stockItems) {
-        this.stockItems = stockItems;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public LocalDateTime getCalculatedAt() {
-        return calculatedAt;
+    public String getDescription() {
+        return description;
     }
 
-    public void setCalculatedAt(LocalDateTime calculatedAt) {
-        this.calculatedAt = calculatedAt;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 }

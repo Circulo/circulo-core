@@ -1,6 +1,7 @@
 package com.circulo.model;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
@@ -12,6 +13,9 @@ public class Supplier {
     @Id
     private String id;
 
+    @DBRef
+    private Organization organization;
+
     private String name;
 
     private Address address;
@@ -22,6 +26,14 @@ public class Supplier {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
     }
 
     public String getName() {

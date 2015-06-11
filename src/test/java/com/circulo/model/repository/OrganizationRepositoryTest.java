@@ -126,7 +126,7 @@ public class OrganizationRepositoryTest {
         Assert.assertEquals(1, orgs.size());
     }
 
-    private Organization generateOrg() {
+    protected static Organization generateOrg() {
 
         String dateStr = DateFormat.getIso8061(new Date());
 

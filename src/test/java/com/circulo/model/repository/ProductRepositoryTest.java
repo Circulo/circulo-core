@@ -1,7 +1,6 @@
 package com.circulo.model.repository;
 
 import com.circulo.model.*;
-import com.circulo.util.DateFormat;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -59,8 +58,8 @@ public class ProductRepositoryTest {
         Assert.assertEquals(product.getSupplier().getAddress().getCountry(), productFound.getSupplier().getAddress().getCountry());
         Assert.assertEquals(product.getSupplier().getAddress().getState(), productFound.getSupplier().getAddress().getState());
         Assert.assertEquals(product.getSupplier().getAddress().getCity(), productFound.getSupplier().getAddress().getCity());
-        Assert.assertEquals(product.getSupplier().getAddress().getZipCode(), productFound.getSupplier().getAddress().getZipCode());
-        Assert.assertEquals(product.getSupplier().getAddress().getPostalAddress(), productFound.getSupplier().getAddress().getPostalAddress());
+        Assert.assertEquals(product.getSupplier().getAddress().getPostalCode(), productFound.getSupplier().getAddress().getPostalCode());
+        Assert.assertEquals(product.getSupplier().getAddress().getPostalAddress1(), productFound.getSupplier().getAddress().getPostalAddress1());
 
         Assert.assertEquals(product.getTags(), productFound.getTags());
         Assert.assertEquals(3, productFound.getVariations().size());
@@ -78,8 +77,8 @@ public class ProductRepositoryTest {
         Assert.assertEquals(product.getSupplier().getAddress().getCountry(), supplierFound.getAddress().getCountry());
         Assert.assertEquals(product.getSupplier().getAddress().getState(), supplierFound.getAddress().getState());
         Assert.assertEquals(product.getSupplier().getAddress().getCity(), supplierFound.getAddress().getCity());
-        Assert.assertEquals(product.getSupplier().getAddress().getZipCode(), supplierFound.getAddress().getZipCode());
-        Assert.assertEquals(product.getSupplier().getAddress().getPostalAddress(), supplierFound.getAddress().getPostalAddress());
+        Assert.assertEquals(product.getSupplier().getAddress().getPostalCode(), supplierFound.getAddress().getPostalCode());
+        Assert.assertEquals(product.getSupplier().getAddress().getPostalAddress1(), supplierFound.getAddress().getPostalAddress1());
 
         // Tests to make sure category is saved and can be retrieved correctly
         Category categoryFound = mongoTemplate.findById(product.getCategory().getId(), Category.class);
@@ -111,7 +110,7 @@ public class ProductRepositoryTest {
             Variation variation = new Variation();
             variation.setSku("Test SKU " + UUID.randomUUID().toString());
             variation.setName("Test Variation Name " + variation.getSku());
-            variation.setDescription("Test Varation Description" + variation.getSku());
+            variation.setNotes("Test Varation Description" + variation.getSku());
             variations.add(variation);
         }
 
@@ -143,8 +142,8 @@ public class ProductRepositoryTest {
         address.setCity("San Francisco");
         address.setCountry("USA");
         address.setState("CA");
-        address.setZipCode("11111");
-        address.setPostalAddress("Test Postal Address");
+        address.setPostalCode("11111");
+        address.setPostalAddress1("Test Postal Address");
 
         return address;
     }

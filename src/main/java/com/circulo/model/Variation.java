@@ -1,6 +1,6 @@
 package com.circulo.model;
 
-import java.util.List;
+import java.math.BigDecimal;
 
 /**
  * Created by azim on 6/9/15.
@@ -12,6 +12,14 @@ public class Variation {
     private String sku;
 
     private String description;
+
+    private BigDecimal wholesalePrice;
+
+    private BigDecimal recommendedRetailPrice;
+
+    private BigDecimal taxOverride;
+
+    private String notes;
 
     public String getName() {
         return name;
@@ -35,6 +43,38 @@ public class Variation {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public BigDecimal getWholesalePrice() {
+        return wholesalePrice;
+    }
+
+    public void setWholesalePrice(BigDecimal wholesalePrice) {
+        this.wholesalePrice = wholesalePrice;
+    }
+
+    public BigDecimal getRecommendedRetailPrice() {
+        return recommendedRetailPrice;
+    }
+
+    public void setRecommendedRetailPrice(BigDecimal recommendedRetailPrice) {
+        this.recommendedRetailPrice = recommendedRetailPrice;
+    }
+
+    public BigDecimal getTaxOverride() {
+        return taxOverride;
+    }
+
+    public void setTaxOverride(BigDecimal taxOverride) {
+        this.taxOverride = taxOverride;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
 }
