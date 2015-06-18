@@ -13,6 +13,10 @@ public class Variation {
 
     private String description;
 
+    private String barCode;
+
+    private BigDecimal buyPrice;
+
     private BigDecimal wholesalePrice;
 
     private BigDecimal recommendedRetailPrice;
@@ -45,8 +49,24 @@ public class Variation {
         this.description = description;
     }
 
+    public String getBarCode() {
+        return barCode;
+    }
+
+    public void setBarCode(String barCode) {
+        this.barCode = barCode;
+    }
+
     public String getNotes() {
         return notes;
+    }
+
+    public BigDecimal getBuyPrice() {
+        return buyPrice;
+    }
+
+    public void setBuyPrice(BigDecimal buyPrice) {
+        this.buyPrice = buyPrice;
     }
 
     public BigDecimal getWholesalePrice() {
