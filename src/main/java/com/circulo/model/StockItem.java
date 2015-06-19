@@ -15,8 +15,6 @@ public class StockItem {
 
     private String notes;
 
-    private String assemblyItemId;
-
     public String getSku() {
         return sku;
     }
@@ -49,11 +47,4 @@ public class StockItem {
         this.notes = notes;
     }
 
-    public String getAssemblyItemId() {
-        return assemblyItemId;
-    }
-
-    public void setAssemblyItemId(String assemblyItemId) {
-        this.assemblyItemId = assemblyItemId;
-    }
 }

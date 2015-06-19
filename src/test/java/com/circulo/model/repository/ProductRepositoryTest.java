@@ -2,11 +2,14 @@ package com.circulo.model.repository;
 
 import com.circulo.model.*;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kubek2k.springockito.annotations.SpringockitoContextLoader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -32,16 +35,28 @@ public class ProductRepositoryTest {
     @Autowired
     private SupplierRepository supplierRepository;
 
+    @Before
+    public void setUp() throws Exception {
+        mongoTemplate.dropCollection(Product.class);
+        mongoTemplate.dropCollection(Category.class);
+        mongoTemplate.dropCollection(Supplier.class);
+    }
+
     @Test
     public void testCreate() {
-        Product product = createProduct();
+        Product product = createDocuments();
 
-        categoryRepository.save(product.getCategory());
-        supplierRepository.save(product.getSupplier());
-        productRepository.save(product);
+        Query query = new Query(Criteria.where("_id").is(product.getId()));
+        List<Product> products = mongoTemplate.find(query, Product.class);
 
-        Product productFound = mongoTemplate.findById(product.getId(), Product.class);
+        Assert.assertEquals(1, products.size());
 
+        Product productFound = products.get(0);
+
+        checkProductData(product, productFound);
+    }
+
+    private void checkProductData(Product product, Product productFound) {
         Assert.assertNotNull(productFound);
         Assert.assertEquals(product.getId(), productFound.getId());
         Assert.assertEquals(product.getName(), productFound.getName());
@@ -62,15 +77,15 @@ public class ProductRepositoryTest {
         Assert.assertEquals(product.getSupplier().getAddress().getPostalAddress1(), productFound.getSupplier().getAddress().getPostalAddress1());
 
         Assert.assertEquals(product.getTags(), productFound.getTags());
-        Assert.assertEquals(3, productFound.getVariations().size());
-        Assert.assertEquals(3, productFound.getTags().size());
+        Assert.assertEquals(product.getVariations().size(), productFound.getVariations().size());
+        Assert.assertEquals(product.getTags().size(), productFound.getTags().size());
 
         for (String tag : productFound.getTags()) {
             Assert.assertTrue(Arrays.asList("Test Tag1", "Test Tag2", "Test Tag3").contains(tag));
         }
 
         // Tests to make sure supplier is saved and can be retrieved correctly
-        Supplier supplierFound = mongoTemplate.findById(product.getSupplier().getId(), Supplier.class);
+        Supplier supplierFound = supplierRepository.findOne(product.getSupplier().getId());
         Assert.assertNotNull(supplierFound);
         Assert.assertEquals(product.getSupplier().getId(), supplierFound.getId());
         Assert.assertEquals(product.getSupplier().getName(), supplierFound.getName());
@@ -81,10 +96,89 @@ public class ProductRepositoryTest {
         Assert.assertEquals(product.getSupplier().getAddress().getPostalAddress1(), supplierFound.getAddress().getPostalAddress1());
 
         // Tests to make sure category is saved and can be retrieved correctly
-        Category categoryFound = mongoTemplate.findById(product.getCategory().getId(), Category.class);
+        Category categoryFound = categoryRepository.findOne(product.getCategory().getId());
         Assert.assertNotNull(categoryFound);
         Assert.assertEquals(product.getCategory().getId(), categoryFound.getId());
         Assert.assertEquals(product.getCategory().getName(), categoryFound.getName());
+    }
+
+    @Test
+    public void testFind() {
+        Product product = createDocuments();
+        Product productFound = productRepository.findOne(product.getId());
+        checkProductData(product, productFound);
+    }
+
+    private Product createDocuments() {
+        Product product = createProduct();
+        categoryRepository.save(product.getCategory());
+        supplierRepository.save(product.getSupplier());
+        productRepository.save(product);
+        return product;
+    }
+
+    @Test
+    public void testUpdate() {
+        Product product = createDocuments();
+        Product productFound = productRepository.findOne(product.getId());
+        checkProductData(product, productFound);
+
+        Variation variation = new Variation();
+        variation.setSku("Test SKU " + UUID.randomUUID().toString());
+        variation.setName("Test Variation Name " + variation.getSku());
+        variation.setNotes("Test Varation Description" + variation.getSku());
+        List<Variation> variations = product.getVariations();
+        variations.add(variation);
+        product.setVariations(variations);
+
+        product.setName("Updated" + product.getName());
+        product.setDescription("Updated" + product.getDescription());
+        product.setStatus(ProductStatus.INACTIVE);
+        productRepository.save(product);
+
+        productFound = productRepository.findOne(product.getId());
+        checkProductData(product, productFound);
+    }
+
+    @Test
+    public void testDelete() {
+        Product product = createDocuments();
+        Product productFound = productRepository.findOne(product.getId());
+        checkProductData(product, productFound);
+
+        productRepository.delete(product);
+        productFound = productRepository.findOne(product.getId());
+        Assert.assertNull(productFound);
+    }
+
+    @Test
+    public void testFindByCategory() {
+        Product product = createDocuments();
+        List<Product> productsFound = productRepository.findByCategory(product.getCategory());
+        Assert.assertEquals(1, productsFound.size());
+
+        Product productFound = productsFound.get(0);
+        checkProductData(product, productFound);
+    }
+
+    @Test
+    public void testFindBySupplier() {
+        Product product = createDocuments();
+        List<Product> productsFound = productRepository.findBySupplier(product.getSupplier());
+        Assert.assertEquals(1, productsFound.size());
+
+        Product productFound = productsFound.get(0);
+        checkProductData(product, productFound);
+    }
+
+    @Test
+    public void testFindByBrand() {
+        Product product = createDocuments();
+        List<Product> productsFound = productRepository.findByBrand(product.getBrand());
+        Assert.assertEquals(1, productsFound.size());
+
+        Product productFound = productsFound.get(0);
+        checkProductData(product, productFound);
     }
 
     private Product createProduct() {
