@@ -11,7 +11,7 @@ import java.util.List;
  * Created by tfulton on 6/10/15.
  */
 @Document(collection = "stock_summary_snapshot")
-public class StockSummarySnapshot {
+public class StockSummary {
 
     @Id
     private String id;

@@ -1,8 +1,7 @@
 package com.circulo.model.repository;
 
 import com.circulo.model.Organization;
-import com.circulo.util.DateFormat;
-import java.util.Date;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kubek2k.springockito.annotations.SpringockitoContextLoader;
@@ -12,10 +11,11 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.junit.Assert;
 
 import java.util.List;
 import java.util.UUID;
+
+import static com.circulo.util.TestUtil.generateOrg;
 
 /**
  * Created by tfulton on 5/24/15.
@@ -124,18 +124,6 @@ public class OrganizationRepositoryTest {
 
         List<Organization> orgs = organizationRepository.findByDescription(org.getDescription());
         Assert.assertEquals(1, orgs.size());
-    }
-
-    protected static Organization generateOrg() {
-
-        String dateStr = DateFormat.getIso8061(new Date());
-
-        Organization organization = new Organization();
-        organization.setId(UUID.randomUUID().toString());
-        organization.setName(UUID.randomUUID().toString());
-        organization.setDescription(dateStr);
-
-        return organization;
     }
 }
 
