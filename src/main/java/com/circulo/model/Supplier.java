@@ -51,4 +51,28 @@ public class Supplier {
     public void setAddress(Address address) {
         this.address = address;
     }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (organization != null ? organization.hashCode() : 0);
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (address != null ? address.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        Supplier supplier = (Supplier) obj;
+
+        if (id != null ? !id.equals(supplier.id) : supplier.id != null) return false;
+        if (organization != null ? !organization.equals(supplier.organization) : supplier.organization != null) return false;
+        if (name != null ? !name.equals(supplier.name) : supplier.name != null) return false;
+        if (address != null ? !address.equals(supplier.address) : supplier.address != null) return false;
+
+        return true;
+    }
 }

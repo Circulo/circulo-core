@@ -135,4 +135,39 @@ public class Assembly {
     public void setLeftOverAssemblyInput(List<AssemblyItem> leftOverAssemblyInput) {
         this.leftOverAssemblyInput = leftOverAssemblyInput;
     }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (organization != null ? organization.hashCode() : 0);
+        result = 31 * result + (stockLocation != null ? stockLocation.hashCode() : 0);
+        result = 31 * result + (assemblyInput != null ? assemblyInput.hashCode() : 0);
+        result = 31 * result + (assemblyOutput != null ? assemblyOutput.hashCode() : 0);
+        result = 31 * result + (lostAssemblyInput != null ? lostAssemblyInput.hashCode() : 0);
+        result = 31 * result + (leftOverAssemblyInput != null ? leftOverAssemblyInput.hashCode() : 0);
+        result = 31 * result + (createdAt != null ? createdAt.hashCode() : 0);
+        result = 31 * result + (updatedAt != null ? updatedAt.hashCode() : 0);
+
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        Assembly assembly = (Assembly) obj;
+
+        if (id != null ? !id.equals(assembly.id) : assembly.id != null) return false;
+        if (organization != null ? !organization.equals(assembly.organization) : assembly.organization != null) return false;
+        if (stockLocation != null ? !stockLocation.equals(assembly.stockLocation) : assembly.stockLocation != null) return false;
+        if (assemblyInput != null ? !assemblyInput.equals(assembly.assemblyInput) : assembly.assemblyInput != null) return false;
+        if (assemblyOutput != null ? !assemblyOutput.equals(assembly.assemblyOutput) : assembly.assemblyOutput != null) return false;
+        if (lostAssemblyInput != null ? !lostAssemblyInput.equals(assembly.lostAssemblyInput) : assembly.lostAssemblyInput != null) return false;
+        if (leftOverAssemblyInput != null ? !leftOverAssemblyInput.equals(assembly.leftOverAssemblyInput) : assembly.leftOverAssemblyInput != null) return false;
+        if (createdAt != null ? !createdAt.equals(assembly.createdAt) : assembly.createdAt != null) return false;
+        if (updatedAt != null ? !updatedAt.equals(assembly.updatedAt) : assembly.updatedAt != null) return false;
+
+        return true;
+    }
 }

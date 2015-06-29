@@ -46,4 +46,28 @@ public class AssemblyItem {
     public void setNotes(String notes) {
         this.notes = notes;
     }
+
+    @Override
+    public int hashCode() {
+        int result = sku != null ? sku.hashCode() : 0;
+        result = 31 * result + (count != null ? count.hashCode() : 0);
+        result = 31 * result + (unitOfMeasure != null ? unitOfMeasure.hashCode() : 0);
+        result = 31 * result + (notes != null ? notes.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        AssemblyItem assemblyItem = (AssemblyItem) obj;
+
+        if (sku != null ? !sku.equals(assemblyItem.sku) : assemblyItem.sku != null) return false;
+        if (count != null ? !count.equals(assemblyItem.count) : assemblyItem.count != null) return false;
+        if (unitOfMeasure != null ? !unitOfMeasure.equals(assemblyItem.unitOfMeasure) : assemblyItem.unitOfMeasure != null) return false;
+        if (notes != null ? !notes.equals(assemblyItem.notes) : assemblyItem.notes != null) return false;
+
+        return true;
+    }
 }

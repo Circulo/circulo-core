@@ -64,4 +64,32 @@ public class Address {
     public void setCountry(String country) {
         this.country = country;
     }
+
+    @Override
+    public int hashCode() {
+        int result = postalAddress1 != null ? postalAddress1.hashCode() : 0;
+        result = 31 * result + (postalAddress2 != null ? postalAddress2.hashCode() : 0);
+        result = 31 * result + (city != null ? city.hashCode() : 0);
+        result = 31 * result + (postalCode != null ? postalCode.hashCode() : 0);
+        result = 31 * result + (state != null ? state.hashCode() : 0);
+        result = 31 * result + (country != null ? country.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        Address address = (Address) obj;
+
+        if (postalAddress1 != null ? !postalAddress1.equals(address.postalAddress1) : address.postalAddress1 != null) return false;
+        if (postalAddress2 != null ? !postalAddress2.equals(address.postalAddress2) : address.postalAddress2 != null) return false;
+        if (city != null ? !city.equals(address.city) : address.city != null) return false;
+        if (postalCode != null ? !postalCode.equals(address.postalCode) : address.postalCode != null) return false;
+        if (state != null ? !state.equals(address.state) : address.state != null) return false;
+        if (country != null ? !country.equals(address.country) : address.country != null) return false;
+
+        return true;
+    }
 }

@@ -29,4 +29,24 @@ public class Category {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        Category category = (Category) obj;
+
+        if (id != null ? !id.equals(category.id) : category.id != null) return false;
+        if (name != null ? !name.equals(category.name) : category.name != null) return false;
+
+        return true;
+    }
 }
