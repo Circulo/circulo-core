@@ -16,7 +16,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
-import java.util.function.BinaryOperator;
 
 import static com.circulo.util.TestUtil.*;
 import static java.util.stream.Collectors.*;
@@ -66,6 +65,7 @@ public class StockSummaryServiceTest {
                 StockItem item = new StockItem();
                 item.setAssemblyItemId(UUID.randomUUID().toString());
                 item.setNotes(UUID.randomUUID().toString());
+                item.setProduct(product);
                 item.setSku(variation.getSku());
 
                 // use the to create summary for this variation
@@ -81,6 +81,7 @@ public class StockSummaryServiceTest {
                     transaction.setLocationTo(null);
                     transaction.setNotes(UUID.randomUUID().toString());
                     transaction.setOrganization(testOrg);
+                    transaction.setProduct(product);
                     transaction.setSku(variation.getSku());
                     transaction.setType(StockTransaction.StockTransactionType.PROCUREMENT);
                     transaction.setUnitOfMeasure(UUID.randomUUID().toString());
@@ -95,52 +96,61 @@ public class StockSummaryServiceTest {
                     stockTransactions.add(transaction);
                 }
 
-                // item count on hand
+                // sum the item count using only the terminal operation "sum"
                 int variationCount = variationTransactions.stream()
                         .mapToInt(StockTransaction::getCount).sum();
+
+                // sum the item count using a collector and a summing argument
                 int variationCount2 = variationTransactions.stream()
                         .collect(summingInt(StockTransaction::getCount));
 
                 Assert.assertEquals(itemCount, variationCount);
                 Assert.assertEquals(itemCount, variationCount2);
 
-                item.setCount(variationCount);
+                item.setOnHand(variationCount2);
 
-                // item total cost
+                // sum the transaction unit costs by mapping into double
                 double variationUnitCostSum = variationTransactions.stream()
                         .map(StockTransaction::getUnitCost).mapToDouble(BigDecimal::doubleValue)
                         .sum();
 
+                // sum the transaction unit cost using big decimal and reduce
                 BigDecimal variationUnitCostSum2 = variationTransactions.stream()
                         .map(StockTransaction::getUnitCost)
                         .reduce(BigDecimal.ZERO, BigDecimal::add);
 
+                // sum the transaction unit cost using big decimal and collector with reduce argument
                 BigDecimal variationUnitCostSum3 = variationTransactions.stream()
                         .map(StockTransaction::getUnitCost)
                         .collect(reducing(BigDecimal.ZERO, BigDecimal::add));
 
+                Assert.assertTrue(variationUnitCostSum - variationUnitCostSum2.doubleValue() < 1);
                 Assert.assertEquals(variationUnitCostSum2, variationUnitCostSum3);
 
                 item.setCost(new BigDecimal(variationUnitCostSum));
-
-                // item total tax
-                double variationTaxSum = variationTransactions.stream()
-                        .map(StockTransaction::getTax).mapToDouble(BigDecimal::doubleValue)
-                        .sum();
-                item.setTax(new BigDecimal(variationTaxSum));
 
                 // add to the summary
                 summary.getStockItemMap().put(item.getSku(), item);
             }
         }
 
-        // calculate the stock summary using the transactions above
-        Map<String, List<StockTransaction>> skuMap = stockTransactions.stream().collect(groupingBy(StockTransaction::getSku));
+        // group the transactions by sku and calculate the count of items in the sku group
+        Map<String, Integer> skuItemCount = stockTransactions.stream()
+                .collect(groupingBy(StockTransaction::getSku, summingInt(StockTransaction::getCount)));
 
-        // calculate the stock summary using the service
+        // validate
+        summary.getStockItemMap().values().forEach(item -> {
 
-        // compare the two
+            Integer outsideCount = skuItemCount.get(item.getSku());
+            Assert.assertTrue(item.getOnHand().compareTo(outsideCount) == 0);
+        });
 
+        // group the transactions by product, then sku and calculate the count of items in the product/sku group
+        Map<Product, Map<String, Integer>> productSkuItemCount = stockTransactions.stream()
+                .collect(groupingBy(StockTransaction::getProduct,
+                        groupingBy(StockTransaction::getSku, summingInt(StockTransaction::getCount))));
+
+        Assert.assertTrue(true);
     }
 
     @Test

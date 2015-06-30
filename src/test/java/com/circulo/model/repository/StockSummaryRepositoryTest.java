@@ -65,10 +65,10 @@ public class StockSummaryRepositoryTest {
 
             StockItem item = new StockItem();
             item.setAssemblyItemId(UUID.randomUUID().toString());
-            item.setCount(randomInt(10, 100));
+            item.setOnHand(randomInt(10, 100));
             item.setNotes(UUID.randomUUID().toString());
             item.setSku(UUID.randomUUID().toString());
-            item.setCost(new BigDecimal(item.getCount() * new Random().nextDouble() * 10));
+            item.setCost(new BigDecimal(item.getOnHand() * new Random().nextDouble() * 10));
             stockItemMap.put(item.getSku(), item);
         }
 
