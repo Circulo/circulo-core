@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static com.circulo.model.repository.OrganizationRepositoryTest.*;
 import static com.circulo.util.TestUtil.*;
 
 /**

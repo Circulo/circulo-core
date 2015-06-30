@@ -11,7 +11,9 @@ public class StockItem {
 
     private Integer count;
 
-    private BigDecimal valuation;
+    private BigDecimal cost;
+
+    private BigDecimal tax;
 
     private String notes;
 
@@ -33,12 +35,20 @@ public class StockItem {
         this.count = count;
     }
 
-    public BigDecimal getValuation() {
-        return valuation;
+    public BigDecimal getCost() {
+        return cost;
     }
 
-    public void setValuation(BigDecimal valuation) {
-        this.valuation = valuation;
+    public void setCost(BigDecimal cost) {
+        this.cost = cost;
+    }
+
+    public BigDecimal getTax() {
+        return tax;
+    }
+
+    public void setTax(BigDecimal tax) {
+        this.tax = tax;
     }
 
     public String getNotes() {
@@ -69,7 +79,7 @@ public class StockItem {
         if (count != null ? !count.equals(stockItem.count) : stockItem.count != null) return false;
         if (notes != null ? !notes.equals(stockItem.notes) : stockItem.notes != null) return false;
         if (sku != null ? !sku.equals(stockItem.sku) : stockItem.sku != null) return false;
-        if (valuation != null ? !valuation.equals(stockItem.valuation) : stockItem.valuation != null) return false;
+        if (cost != null ? !cost.equals(stockItem.cost) : stockItem.cost != null) return false;
 
         return true;
     }
@@ -78,7 +88,7 @@ public class StockItem {
     public int hashCode() {
         int result = sku != null ? sku.hashCode() : 0;
         result = 31 * result + (count != null ? count.hashCode() : 0);
-        result = 31 * result + (valuation != null ? valuation.hashCode() : 0);
+        result = 31 * result + (cost != null ? cost.hashCode() : 0);
         result = 31 * result + (notes != null ? notes.hashCode() : 0);
         result = 31 * result + (assemblyItemId != null ? assemblyItemId.hashCode() : 0);
         return result;

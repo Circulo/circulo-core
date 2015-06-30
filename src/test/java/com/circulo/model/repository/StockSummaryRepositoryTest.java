@@ -15,10 +15,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 import static com.circulo.util.TestUtil.*;
 
@@ -45,11 +42,12 @@ public class StockSummaryRepositoryTest {
         Organization testOrg = generateOrg();
         organizationRepository.save(testOrg);
 
+        // create a stock summary manually
         StockSummary snapshot = new StockSummary();
         snapshot.setCalculatedAt(LocalDateTime.now(ZoneId.of("UTC")));
         snapshot.setId(UUID.randomUUID().toString());
         snapshot.setOrganization(testOrg);
-        snapshot.setStockItems(generateStockItems());
+        snapshot.setStockItemMap(generateStockItems());
         stockSummaryRepository.save(snapshot);
 
         StockSummary foundSnapshot = mongoTemplate.findById(snapshot.getId(), StockSummary.class);
@@ -57,12 +55,12 @@ public class StockSummaryRepositoryTest {
         Assert.assertEquals(snapshot.getCalculatedAt(), foundSnapshot.getCalculatedAt());
         Assert.assertEquals(snapshot.getId(), foundSnapshot.getId());
         Assert.assertEquals(snapshot.getOrganization(), foundSnapshot.getOrganization());
-        Assert.assertEquals(snapshot.getStockItems(), foundSnapshot.getStockItems());
+        Assert.assertEquals(snapshot.getStockItemMap(), foundSnapshot.getStockItemMap());
     }
 
-    public static List<StockItem> generateStockItems() {
+    public static Map<String, StockItem> generateStockItems() {
 
-        List<StockItem> items = new ArrayList<>();
+        Map<String, StockItem> stockItemMap = new HashMap<>();
         for (int i=0; i < 10; i++) {
 
             StockItem item = new StockItem();
@@ -70,9 +68,10 @@ public class StockSummaryRepositoryTest {
             item.setCount(randomInt(10, 100));
             item.setNotes(UUID.randomUUID().toString());
             item.setSku(UUID.randomUUID().toString());
-            item.setValuation(new BigDecimal(item.getCount()* new Random().nextDouble()*10));
+            item.setCost(new BigDecimal(item.getCount() * new Random().nextDouble() * 10));
+            stockItemMap.put(item.getSku(), item);
         }
 
-        return items;
+        return stockItemMap;
     }
 }

@@ -52,6 +52,13 @@ public class StockTransaction {
 
     private LocalDateTime createdAt = LocalDateTime.now(ZoneId.of("UTC"));
 
+    public void calculateGrossValue() {
+
+        double grossValue = this.getCount() * this.getUnitCost().doubleValue();
+        grossValue += this.getTax().doubleValue();
+        this.grossUnitCost = new BigDecimal(grossValue);
+    }
+
     public String getId() {
         return id;
     }

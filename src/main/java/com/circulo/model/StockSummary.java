@@ -6,11 +6,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by tfulton on 6/10/15.
  */
-@Document(collection = "stock_summary_snapshot")
+@Document(collection = "stock_summary")
 public class StockSummary {
 
     @Id
@@ -19,7 +20,7 @@ public class StockSummary {
     @DBRef
     private Organization organization;
 
-    private List<StockItem> stockItems;
+    private Map<String, StockItem> stockItemMap;
 
     private LocalDateTime calculatedAt;
 
@@ -39,12 +40,12 @@ public class StockSummary {
         this.organization = organization;
     }
 
-    public List<StockItem> getStockItems() {
-        return stockItems;
+    public Map<String, StockItem> getStockItemMap() {
+        return stockItemMap;
     }
 
-    public void setStockItems(List<StockItem> stockItems) {
-        this.stockItems = stockItems;
+    public void setStockItemMap(Map<String, StockItem> stockItemMap) {
+        this.stockItemMap = stockItemMap;
     }
 
     public LocalDateTime getCalculatedAt() {

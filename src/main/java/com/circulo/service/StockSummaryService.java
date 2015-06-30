@@ -21,9 +21,11 @@ public class StockSummaryService {
 
     public StockSummary calculateSummary(Organization organization) {
 
-        // find the latest/max summary snapshot
+        // create a new stock summary, set the org
+        StockSummary summary = new StockSummary();
+        summary.setOrganization(organization);
 
-        // pull the stock transactions created since the snapshot above was calculated
+        // pull the stock transactions for the org
         List<StockTransaction> transactionsSince = stockTransactionRepository.findByOrganization(organization);
 
         // filter through each SKU and add to, or update an existing summary item
