@@ -1,11 +1,11 @@
 package com.circulo.model.repository;
 
 import com.circulo.model.*;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.kubek2k.springockito.annotations.SpringockitoContextLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -18,10 +18,13 @@ import java.util.*;
 /**
  * Created by azim on 6/9/15.
  */
+//@Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = SpringockitoContextLoader.class,
         locations = {"classpath:spring-test-config.xml"})
 public class ProductRepositoryTest {
+
+    Logger logger = LoggerFactory.getLogger(ProductRepositoryTest.class);
 
     @Autowired
     private MongoTemplate mongoTemplate;
@@ -34,13 +37,6 @@ public class ProductRepositoryTest {
 
     @Autowired
     private SupplierRepository supplierRepository;
-
-    @Before
-    public void setUp() throws Exception {
-        mongoTemplate.dropCollection(Product.class);
-        mongoTemplate.dropCollection(Category.class);
-        mongoTemplate.dropCollection(Supplier.class);
-    }
 
     @Test
     public void testCreate() {

@@ -1,10 +1,8 @@
 package com.circulo.model.repository;
 
 import com.circulo.model.Organization;
-import com.circulo.model.Product;
 import com.circulo.model.StockTransaction;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.mongodb.repository.Query;
 
 import java.time.LocalDateTime;
 import java.util.List;
