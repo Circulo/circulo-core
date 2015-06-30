@@ -1,5 +1,6 @@
 package com.circulo.model;
 
+import com.google.common.base.MoreObjects;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -74,5 +75,15 @@ public class Supplier {
         if (address != null ? !address.equals(supplier.address) : supplier.address != null) return false;
 
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("id", id)
+                .add("organization", organization)
+                .add("name", name)
+                .add("address", address)
+                .toString();
     }
 }

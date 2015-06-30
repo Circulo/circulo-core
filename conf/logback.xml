@@ -1,16 +1,29 @@
 <configuration scan="true" scanPeriod="300 seconds">
 
     <!-- Spring -->
-    <logger name="org.springframework" level="OFF"/>
+    <logger name="org.springframework" level="INFO"/>
 
-    <!-- Finbot -->
-    <logger name="com.recurly.finbot" level="DEBUG"/>
+    <!-- Circulo Core -->
+    <logger name="com.circulo" level="INFO"/>
 
     <!-- hibernate query logging -->
     <!--<logger name="org.hibernate.SQL" level="DEBUG"/>-->
 
     <!-- hibernate parameter logging -->
     <!--<logger name="org.hibernate.type" level="TRACE"/>-->
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>${user.dir:-.}/logs/application.log</file>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} %msg%n</pattern>
+        </encoder>
+    </appender>
 
     <root level="INFO">
         <appender-ref ref="STDOUT" />

@@ -1,5 +1,7 @@
 package com.circulo.model;
 
+import com.google.common.base.MoreObjects;
+
 /**
  * Created by azim on 6/9/15.
  */
@@ -91,5 +93,17 @@ public class Address {
         if (country != null ? !country.equals(address.country) : address.country != null) return false;
 
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("postalAddress1", postalAddress1)
+                .add("postalAddress2", postalAddress2)
+                .add("city", city)
+                .add("postalCode", postalCode)
+                .add("state", state)
+                .add("country", country)
+                .toString();
     }
 }

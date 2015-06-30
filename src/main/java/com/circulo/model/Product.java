@@ -1,5 +1,6 @@
 package com.circulo.model;
 
+import com.google.common.base.MoreObjects;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -150,5 +151,21 @@ public class Product {
         if (variations != null ? !variations.equals(product.variations) : product.variations != null) return false;
 
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("id", id)
+                .add("organization", organization)
+                .add("name", name)
+                .add("category", category)
+                .add("description", description)
+                .add("supplier", supplier)
+                .add("brand", brand)
+                .add("tags", tags)
+                .add("status", status)
+                .add("variations", variations)
+                .toString();
     }
 }

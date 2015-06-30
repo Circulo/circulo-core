@@ -1,5 +1,7 @@
 package com.circulo.model;
 
+import com.google.common.base.MoreObjects;
+
 import java.math.BigDecimal;
 
 /**
@@ -129,5 +131,20 @@ public class Variation {
         result = 31 * result + (taxOverride != null ? taxOverride.hashCode() : 0);
         result = 31 * result + (notes != null ? notes.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("name", name)
+                .add("sku", sku)
+                .add("description", description)
+                .add("barCode", barCode)
+                .add("buyPrice", buyPrice)
+                .add("wholesalePrice", wholesalePrice)
+                .add("recommendedRetailPrice", recommendedRetailPrice)
+                .add("taxOverride", taxOverride)
+                .add("notes", notes)
+                .toString();
     }
 }

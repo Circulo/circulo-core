@@ -1,7 +1,5 @@
 package com.circulo.model;
 
-import java.math.BigDecimal;
-
 /**
  * Created by azim on 6/17/15.
  */

@@ -1,5 +1,6 @@
 package com.circulo.model;
 
+import com.google.common.base.MoreObjects;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -48,5 +49,13 @@ public class Category {
         if (name != null ? !name.equals(category.name) : category.name != null) return false;
 
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("id", id)
+                .add("name", name)
+                .toString();
     }
 }
