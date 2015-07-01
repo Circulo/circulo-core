@@ -1,5 +1,6 @@
 package com.circulo.model.repository;
 
+import com.circulo.enums.ProductStatus;
 import com.circulo.model.*;
 import org.junit.*;
 import org.junit.runner.RunWith;

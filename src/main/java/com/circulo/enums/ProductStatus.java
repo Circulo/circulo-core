@@ -1,4 +1,4 @@
-package com.circulo.model;
+package com.circulo.enums;
 
 /**
  * Created by azim on 6/9/15.

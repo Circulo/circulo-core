@@ -1,43 +1,43 @@
 package com.circulo.service;
 
 import com.circulo.model.Procurement;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
- * Created by tfulton on 6/18/15.
+ * Created by tfulton on 7/1/15.
  */
-@Component
-public class ProcurementService {
+public interface ProcurementService {
 
-    @Autowired
-    private StockSummaryService stockSummaryService;
+    /**
+     * Creates a stock procurement in the database.
+     * <p>
+     *     NOTE:  while the procurement details are indeed persisted, in order to
+     *     actually affect stock levels and create detail stock transactions, the
+     *     procurement must be "received" using {@link #receiveProcurement(Procurement procurement)
+     *     receiveProcurement} method.
+     * </p>
+     *
+     * @param procurement The Procurement object to persist.
+     */
+    public void createProcurement(Procurement procurement);
 
-    public Procurement createProcurement(Procurement procurement) {
+    /**
+     * Updates an existing stock procurement.
+     *
+     * @param procurement The Procurement object to persist.
+     */
+    public void updateProcurement(Procurement procurement);
 
-        return null;
-    }
-
-    public Procurement updateProcurement(Procurement procurement) {
-
-        return null;
-    }
-
-    public Procurement getProcurement(String id) {
-
-        return null;
-    }
-
-    public Procurement receiveProcurement(Procurement procurement) {
-
-        // validate totals including quantities, unit cost totals and tax totals
-
-        // create stock transactions for each procurement item
-
-        // update the stock summary snapshot
-
-        // return the updated/received procurement
-
-        return null;
-    }
+    /**
+     * Receives a stock procurement and adjusts stock levels.  The following actions are taken:
+     * <p>
+     *     <ul>
+     *         <li>Stock transactions are created for each variant included in the procurement</li>
+     *         <li>Stock summary is recalculated based on the new stock transactions.</li>
+     *         <li>The procurement is noted as received.</li>
+     *     </ul>
+     * </p>
+     *
+     * @param procurement The Procurement object to receive.
+     */
+    public void receiveProcurement(Procurement procurement);
 }

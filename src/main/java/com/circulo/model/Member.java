@@ -1,5 +1,7 @@
 package com.circulo.model;
 
+import com.circulo.enums.Gender;
+import com.circulo.enums.MemberType;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 

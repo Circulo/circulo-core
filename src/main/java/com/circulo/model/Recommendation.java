@@ -1,5 +1,6 @@
 package com.circulo.model;
 
+import com.circulo.enums.VerificationProvider;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 
 import java.util.Date;

@@ -1,38 +1,42 @@
 package com.circulo.service;
 
 import com.circulo.model.Organization;
+import com.circulo.model.StockLocation;
 import com.circulo.model.StockSummary;
-import com.circulo.model.StockTransaction;
-import com.circulo.model.repository.StockTransactionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.stream.Stream;
+import java.util.Map;
 
 /**
- * Created by tfulton on 6/18/15.
+ * Created by tfulton on 7/1/15.
  */
-@Component
-public class StockSummaryService {
+public interface StockSummaryService {
 
-    @Autowired
-    private StockTransactionRepository stockTransactionRepository;
+    /**
+     * Retrieves last summary and calculates current based on latest stock transaction history.
+     * The calculated summary is saved to the db.
+     *
+     * @param organization The organization for which to calculate the summary.
+     * @return A StockSummary object.
+     */
+    public StockSummary getCurrentSummary(Organization organization);
 
-    public StockSummary calculateSummary(Organization organization) {
+    /**
+     * Retrieves last summary and calculates current based on latest stock transaction history.
+     * The summary is further broken down by location.
+     * The calculated summary is saved to the db.
+     *
+     * @param organization The organization for which to calculate the summary.
+     * @return A map of StockSummary objects keyed by location.
+     */
+    public Map<StockLocation, StockSummary> getCurrentSummaryByLocation(Organization organization);
 
-        // create a new stock summary, set the org
-        StockSummary summary = new StockSummary();
-        summary.setOrganization(organization);
+    /**
+     * Retrieves (if it exists) or calculates a summary for a specific date in time.
+     * The calculated summary is saved to the db.
+     *
+     * @param organization The organization for which to calculate the summary.
+     * @return A StockSummary object.
+     */
+    public StockSummary getSummaryByDate(Organization organization);
 
-        // pull the stock transactions for the org
-        List<StockTransaction> transactionsSince = stockTransactionRepository.findByOrganization(organization);
-
-        // filter through each SKU and add to, or update an existing summary item
-        Stream<StockTransaction> txStream = transactionsSince.stream();
-//        txStream.
-
-
-        return null;
-    }
 }

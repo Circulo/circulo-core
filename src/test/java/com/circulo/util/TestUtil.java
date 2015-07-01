@@ -1,5 +1,6 @@
 package com.circulo.util;
 
+import com.circulo.enums.ProductStatus;
 import com.circulo.model.*;
 
 import java.math.BigDecimal;

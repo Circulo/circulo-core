@@ -1,5 +1,6 @@
 package com.circulo.model;
 
+import com.circulo.enums.ProductStatus;
 import com.google.common.base.MoreObjects;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
