@@ -58,13 +58,28 @@ public class StockSummaryRepositoryTest {
         Assert.assertEquals(snapshot.getStockItemMap(), foundSnapshot.getStockItemMap());
     }
 
+    @Test
+    public void testFindByOrgAndMaxDate() {
+
+        Organization testOrg = generateOrg();
+        organizationRepository.save(testOrg);
+
+        // create several summaries manually
+        StockSummary snapshot = new StockSummary();
+        snapshot.setCalculatedAt(LocalDateTime.now(ZoneId.of("UTC")));
+        snapshot.setId(UUID.randomUUID().toString());
+        snapshot.setOrganization(testOrg);
+        snapshot.setStockItemMap(generateStockItems());
+        stockSummaryRepository.save(snapshot);
+
+    }
+
     public static Map<String, StockItem> generateStockItems() {
 
         Map<String, StockItem> stockItemMap = new HashMap<>();
         for (int i=0; i < 10; i++) {
 
             StockItem item = new StockItem();
-            item.setAssemblyItemId(UUID.randomUUID().toString());
             item.setOnHand(randomInt(10, 100));
             item.setNotes(UUID.randomUUID().toString());
             item.setSku(UUID.randomUUID().toString());

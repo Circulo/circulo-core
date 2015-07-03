@@ -11,21 +11,17 @@ public class StockItem {
 
     private String sku;
 
-    private Integer onHand;
+    private Integer onHand = 0;
 
-    private Integer committed;
+    private Integer committed = 0;
 
-    private Integer available;
+    private Integer available = 0;
 
-    private Integer onOrder;
+    private BigDecimal cost = new BigDecimal(0);
 
-    private BigDecimal cost;
-
-    private BigDecimal tax;
+    private BigDecimal tax = new BigDecimal(0);
 
     private String notes;
-
-    private String assemblyItemId;
 
     public Product getProduct() {
         return product;
@@ -67,14 +63,6 @@ public class StockItem {
         this.available = available;
     }
 
-    public Integer getOnOrder() {
-        return onOrder;
-    }
-
-    public void setOnOrder(Integer onOrder) {
-        this.onOrder = onOrder;
-    }
-
     public BigDecimal getCost() {
         return cost;
     }
@@ -99,14 +87,6 @@ public class StockItem {
         this.notes = notes;
     }
 
-    public String getAssemblyItemId() {
-        return assemblyItemId;
-    }
-
-    public void setAssemblyItemId(String assemblyItemId) {
-        this.assemblyItemId = assemblyItemId;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -114,14 +94,11 @@ public class StockItem {
 
         StockItem item = (StockItem) o;
 
-        if (assemblyItemId != null ? !assemblyItemId.equals(item.assemblyItemId) : item.assemblyItemId != null)
-            return false;
         if (available != null ? !available.equals(item.available) : item.available != null) return false;
         if (committed != null ? !committed.equals(item.committed) : item.committed != null) return false;
         if (cost != null ? !cost.equals(item.cost) : item.cost != null) return false;
         if (notes != null ? !notes.equals(item.notes) : item.notes != null) return false;
         if (onHand != null ? !onHand.equals(item.onHand) : item.onHand != null) return false;
-        if (onOrder != null ? !onOrder.equals(item.onOrder) : item.onOrder != null) return false;
         if (sku != null ? !sku.equals(item.sku) : item.sku != null) return false;
         if (tax != null ? !tax.equals(item.tax) : item.tax != null) return false;
 
@@ -134,11 +111,9 @@ public class StockItem {
         result = 31 * result + (onHand != null ? onHand.hashCode() : 0);
         result = 31 * result + (committed != null ? committed.hashCode() : 0);
         result = 31 * result + (available != null ? available.hashCode() : 0);
-        result = 31 * result + (onOrder != null ? onOrder.hashCode() : 0);
         result = 31 * result + (cost != null ? cost.hashCode() : 0);
         result = 31 * result + (tax != null ? tax.hashCode() : 0);
         result = 31 * result + (notes != null ? notes.hashCode() : 0);
-        result = 31 * result + (assemblyItemId != null ? assemblyItemId.hashCode() : 0);
         return result;
     }
 }

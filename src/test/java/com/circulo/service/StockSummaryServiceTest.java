@@ -29,6 +29,9 @@ import static java.util.stream.Collectors.*;
 public class StockSummaryServiceTest {
 
     @Autowired
+    private StockSummaryService stockSummaryService;
+
+    @Autowired
     private OrganizationRepository organizationRepository;
 
     @Autowired
@@ -63,7 +66,6 @@ public class StockSummaryServiceTest {
             for (Variation variation : product.getVariations()) {
 
                 StockItem item = new StockItem();
-                item.setAssemblyItemId(UUID.randomUUID().toString());
                 item.setNotes(UUID.randomUUID().toString());
                 item.setProduct(product);
                 item.setSku(variation.getSku());

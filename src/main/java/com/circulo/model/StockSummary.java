@@ -5,6 +5,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +21,7 @@ public class StockSummary {
     @DBRef
     private Organization organization;
 
-    private Map<String, StockItem> stockItemMap;
+    private Map<String, StockItem> stockItemMap = new HashMap<>();
 
     private LocalDateTime calculatedAt;
 

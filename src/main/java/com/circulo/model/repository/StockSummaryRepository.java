@@ -2,7 +2,9 @@ package com.circulo.model.repository;
 
 import com.circulo.model.Organization;
 import com.circulo.model.StockSummary;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
 
 import java.util.List;
 
@@ -12,5 +14,7 @@ import java.util.List;
 public interface StockSummaryRepository extends MongoRepository<StockSummary, String> {
 
     public List<StockSummary> findByOrganization(Organization organization);
+
+    public StockSummary findFirstByOrganization(Organization organization, Sort sort);
 
 }
