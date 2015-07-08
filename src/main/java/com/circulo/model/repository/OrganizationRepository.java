@@ -14,6 +14,4 @@ public interface OrganizationRepository
 
     @Query("{ 'name' : ?0 }")
     public List<Organization> findOrganizationByName(String name);
-
-    public List<Organization> findByDescription(String description);
 }

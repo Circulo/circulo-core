@@ -18,7 +18,7 @@ public class TestUtil {
 
     public static Organization createOrganization() {
 
-        String dateStr = DateFormat.getIso8061(new Date());
+        String dateStr = DateUtils.getIso8061(new Date());
 
         Organization organization = new Organization();
         organization.setId(UUID.randomUUID().toString());
@@ -37,7 +37,6 @@ public class TestUtil {
         product.setCategory(createCategory());
         product.setDescription("Test Description " + product.getId());
         product.setStatus(ProductStatus.ACTIVE);
-        product.setSupplier(createSupplier());
         product.setTags(Arrays.asList("Test Tag1", "Test Tag2", "Test Tag3"));
         product.setVariations(createVariations());
 

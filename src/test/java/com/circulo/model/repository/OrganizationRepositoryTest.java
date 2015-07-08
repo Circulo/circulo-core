@@ -119,7 +119,7 @@ public class OrganizationRepositoryTest {
             e.printStackTrace();
         }
 
-        Organization org = createOrganization();
+        Organization org = generateOrg();
         organizationRepository.save(org);
 
         List<Organization> orgs = organizationRepository.findByDescription(org.getDescription());

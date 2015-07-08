@@ -48,9 +48,10 @@ public class StockTransaction {
     public enum StockTransactionType {
 
         ADJUSTMENT,
+        COMMITTMENT,
         PROCUREMENT,
         SALE,
-        TRANSFER,
+        TRANSFER
     }
 
     private LocalDateTime createdAt = LocalDateTime.now(ZoneId.of("UTC"));
