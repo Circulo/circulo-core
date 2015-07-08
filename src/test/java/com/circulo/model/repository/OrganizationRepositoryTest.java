@@ -109,21 +109,5 @@ public class OrganizationRepositoryTest {
         Assert.assertEquals(org.getName(), copy.getName());
         Assert.assertEquals(org.getDescription(), copy.getDescription());
     }
-
-    @Test
-    public void testFindByDesc() {
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        Organization org = generateOrg();
-        organizationRepository.save(org);
-
-        List<Organization> orgs = organizationRepository.findByDescription(org.getDescription());
-        Assert.assertEquals(1, orgs.size());
-    }
 }
 

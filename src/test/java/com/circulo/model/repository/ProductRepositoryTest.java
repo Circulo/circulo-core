@@ -65,13 +65,13 @@ public class ProductRepositoryTest {
         Assert.assertEquals(product.getDescription(), productFound.getDescription());
         Assert.assertEquals(product.getStatus(), productFound.getStatus());
 
-        Assert.assertEquals(product.getSupplier().getId(), productFound.getSupplier().getId());
-        Assert.assertEquals(product.getSupplier().getName(), productFound.getSupplier().getName());
-        Assert.assertEquals(product.getSupplier().getAddress().getCountry(), productFound.getSupplier().getAddress().getCountry());
-        Assert.assertEquals(product.getSupplier().getAddress().getState(), productFound.getSupplier().getAddress().getState());
-        Assert.assertEquals(product.getSupplier().getAddress().getCity(), productFound.getSupplier().getAddress().getCity());
-        Assert.assertEquals(product.getSupplier().getAddress().getPostalCode(), productFound.getSupplier().getAddress().getPostalCode());
-        Assert.assertEquals(product.getSupplier().getAddress().getPostalAddress1(), productFound.getSupplier().getAddress().getPostalAddress1());
+//        Assert.assertEquals(product.getSupplier().getId(), productFound.getSupplier().getId());
+//        Assert.assertEquals(product.getSupplier().getName(), productFound.getSupplier().getName());
+//        Assert.assertEquals(product.getSupplier().getAddress().getCountry(), productFound.getSupplier().getAddress().getCountry());
+//        Assert.assertEquals(product.getSupplier().getAddress().getState(), productFound.getSupplier().getAddress().getState());
+//        Assert.assertEquals(product.getSupplier().getAddress().getCity(), productFound.getSupplier().getAddress().getCity());
+//        Assert.assertEquals(product.getSupplier().getAddress().getPostalCode(), productFound.getSupplier().getAddress().getPostalCode());
+//        Assert.assertEquals(product.getSupplier().getAddress().getPostalAddress1(), productFound.getSupplier().getAddress().getPostalAddress1());
 
         Assert.assertEquals(product.getTags(), productFound.getTags());
         Assert.assertEquals(product.getVariations().size(), productFound.getVariations().size());
@@ -82,15 +82,15 @@ public class ProductRepositoryTest {
         }
 
         // Tests to make sure supplier is saved and can be retrieved correctly
-        Supplier supplierFound = supplierRepository.findOne(product.getSupplier().getId());
-        Assert.assertNotNull(supplierFound);
-        Assert.assertEquals(product.getSupplier().getId(), supplierFound.getId());
-        Assert.assertEquals(product.getSupplier().getName(), supplierFound.getName());
-        Assert.assertEquals(product.getSupplier().getAddress().getCountry(), supplierFound.getAddress().getCountry());
-        Assert.assertEquals(product.getSupplier().getAddress().getState(), supplierFound.getAddress().getState());
-        Assert.assertEquals(product.getSupplier().getAddress().getCity(), supplierFound.getAddress().getCity());
-        Assert.assertEquals(product.getSupplier().getAddress().getPostalCode(), supplierFound.getAddress().getPostalCode());
-        Assert.assertEquals(product.getSupplier().getAddress().getPostalAddress1(), supplierFound.getAddress().getPostalAddress1());
+//        Supplier supplierFound = supplierRepository.findOne(product.getSupplier().getId());
+//        Assert.assertNotNull(supplierFound);
+//        Assert.assertEquals(product.getSupplier().getId(), supplierFound.getId());
+//        Assert.assertEquals(product.getSupplier().getName(), supplierFound.getName());
+//        Assert.assertEquals(product.getSupplier().getAddress().getCountry(), supplierFound.getAddress().getCountry());
+//        Assert.assertEquals(product.getSupplier().getAddress().getState(), supplierFound.getAddress().getState());
+//        Assert.assertEquals(product.getSupplier().getAddress().getCity(), supplierFound.getAddress().getCity());
+//        Assert.assertEquals(product.getSupplier().getAddress().getPostalCode(), supplierFound.getAddress().getPostalCode());
+//        Assert.assertEquals(product.getSupplier().getAddress().getPostalAddress1(), supplierFound.getAddress().getPostalAddress1());
 
         // Tests to make sure category is saved and can be retrieved correctly
         Category categoryFound = categoryRepository.findOne(product.getCategory().getId());
@@ -109,7 +109,6 @@ public class ProductRepositoryTest {
     private Product createDocuments() {
         Product product = createProduct();
         categoryRepository.save(product.getCategory());
-        supplierRepository.save(product.getSupplier());
         productRepository.save(product);
         return product;
     }
@@ -158,15 +157,15 @@ public class ProductRepositoryTest {
         checkProductData(product, productFound);
     }
 
-    @Test
-    public void testFindBySupplier() {
-        Product product = createDocuments();
-        List<Product> productsFound = productRepository.findBySupplier(product.getSupplier());
-        Assert.assertEquals(1, productsFound.size());
-
-        Product productFound = productsFound.get(0);
-        checkProductData(product, productFound);
-    }
+//    @Test
+//    public void testFindBySupplier() {
+//        Product product = createDocuments();
+//        List<Product> productsFound = productRepository.findBySupplier(product.getSupplier());
+//        Assert.assertEquals(1, productsFound.size());
+//
+//        Product productFound = productsFound.get(0);
+//        checkProductData(product, productFound);
+//    }
 
     @Test
     public void testFindByBrand() {
@@ -187,7 +186,6 @@ public class ProductRepositoryTest {
         product.setCategory(createCategory());
         product.setDescription("Test Description " + product.getId());
         product.setStatus(ProductStatus.ACTIVE);
-        product.setSupplier(createSupplier());
         product.setTags(Arrays.asList("Test Tag1", "Test Tag2", "Test Tag3"));
         product.setVariations(createVariations());
 
