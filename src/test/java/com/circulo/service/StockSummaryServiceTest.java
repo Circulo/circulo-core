@@ -161,7 +161,7 @@ public class StockSummaryServiceTest {
     }
 
     @Test
-    public void testCalculateFromExisting() {
+    public void testCalculateFromLatest() {
 
     }
 }
