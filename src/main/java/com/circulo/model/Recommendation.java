@@ -1,6 +1,7 @@
 package com.circulo.model;
 
 import com.circulo.enums.VerificationProvider;
+import com.mongodb.gridfs.GridFSDBFile;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 
 import java.util.Date;
@@ -20,6 +21,8 @@ public class Recommendation {
 
     @DBRef
     private Doctor doctor;
+
+    private GridFSDBFile recommendationFile;
 
     public VerificationProvider getVerificationProvider() {
         return verificationProvider;
@@ -59,5 +62,13 @@ public class Recommendation {
 
     public void setDoctor(Doctor doctor) {
         this.doctor = doctor;
+    }
+
+    public GridFSDBFile getRecommendationFile() {
+        return recommendationFile;
+    }
+
+    public void setRecommendationFile(GridFSDBFile recommendationFile) {
+        this.recommendationFile = recommendationFile;
     }
 }

@@ -2,6 +2,8 @@ package com.circulo.model;
 
 import com.circulo.enums.Gender;
 import com.circulo.enums.MemberType;
+import com.mongodb.gridfs.GridFSDBFile;
+import com.mongodb.gridfs.GridFSFile;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -41,6 +43,12 @@ public class Member {
     private String homePhone;
 
     private Recommendation recommendation;
+
+    private GridFSDBFile applicationFormFile;
+
+    private GridFSDBFile stateIdFile;
+
+    private GridFSDBFile alternateIdFile;
 
     public String getId() {
         return id;
@@ -152,5 +160,29 @@ public class Member {
 
     public void setRecommendation(Recommendation recommendation) {
         this.recommendation = recommendation;
+    }
+
+    public GridFSDBFile getApplicationFormFile() {
+        return applicationFormFile;
+    }
+
+    public void setApplicationFormFile(GridFSDBFile applicationFormFile) {
+        this.applicationFormFile = applicationFormFile;
+    }
+
+    public GridFSDBFile getStateIdFile() {
+        return stateIdFile;
+    }
+
+    public void setStateIdFile(GridFSDBFile stateIdFile) {
+        this.stateIdFile = stateIdFile;
+    }
+
+    public GridFSDBFile getAlternateIdFile() {
+        return alternateIdFile;
+    }
+
+    public void setAlternateIdFile(GridFSDBFile alternateIdFile) {
+        this.alternateIdFile = alternateIdFile;
     }
 }

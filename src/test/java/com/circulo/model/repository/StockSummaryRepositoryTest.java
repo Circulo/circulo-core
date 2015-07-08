@@ -39,7 +39,7 @@ public class StockSummaryRepositoryTest {
     @Test
     public void testSaveBasicSummary() {
 
-        Organization testOrg = generateOrg();
+        Organization testOrg = createOrganization();
         organizationRepository.save(testOrg);
 
         // create a stock summary manually

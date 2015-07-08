@@ -42,7 +42,7 @@ public class StockTransactionRepositoryTest {
     @Before
     public void setup() {
 
-        organization = generateOrg();
+        organization = createOrganization();
         organizationRepository.save(organization);
 
         organization = organizationRepository.findOne(organization.getId());
@@ -85,7 +85,7 @@ public class StockTransactionRepositoryTest {
     @Test
     public void testFindByOrganization() {
 
-        Organization testOrg = generateOrg();
+        Organization testOrg = createOrganization();
         organizationRepository.save(testOrg);
 
         int count = randomInt(10, 30);
@@ -120,7 +120,7 @@ public class StockTransactionRepositoryTest {
     @Test
     public void testFindByDateTime() {
 
-        Organization testOrg = generateOrg();
+        Organization testOrg = createOrganization();
         organizationRepository.save(testOrg);
 
         int countBefore = randomInt(10, 30);

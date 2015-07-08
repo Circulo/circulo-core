@@ -15,7 +15,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.util.List;
 import java.util.UUID;
 
-import static com.circulo.util.TestUtil.generateOrg;
+import static com.circulo.util.TestUtil.createOrganization;
 
 /**
  * Created by tfulton on 5/24/15.
@@ -34,7 +34,7 @@ public class OrganizationRepositoryTest {
     @Test
     public void testCreate() {
 
-        Organization org = generateOrg();
+        Organization org = createOrganization();
         organizationRepository.save(org);
 
         Query query = new Query(Criteria.where("_id").is(org.getId()));
@@ -49,7 +49,7 @@ public class OrganizationRepositoryTest {
     @Test
     public void testFind() {
 
-        Organization org = generateOrg();
+        Organization org = createOrganization();
         organizationRepository.save(org);
 
         Organization copy = organizationRepository.findOne(org.getId());
@@ -61,7 +61,7 @@ public class OrganizationRepositoryTest {
     @Test
     public void testUpdate() {
 
-        Organization org = generateOrg();
+        Organization org = createOrganization();
         organizationRepository.save(org);
 
         Organization copy = organizationRepository.findOne(org.getId());
@@ -82,7 +82,7 @@ public class OrganizationRepositoryTest {
     @Test
     public void testDelete() {
 
-        Organization org = generateOrg();
+        Organization org = createOrganization();
         organizationRepository.save(org);
 
         Organization copy = organizationRepository.findOne(org.getId());
@@ -98,7 +98,7 @@ public class OrganizationRepositoryTest {
     @Test
     public void testFindByName() {
 
-        Organization org = generateOrg();
+        Organization org = createOrganization();
         organizationRepository.save(org);
 
         List<Organization> orgs = organizationRepository.findOrganizationByName(org.getName());
@@ -119,7 +119,7 @@ public class OrganizationRepositoryTest {
             e.printStackTrace();
         }
 
-        Organization org = generateOrg();
+        Organization org = createOrganization();
         organizationRepository.save(org);
 
         List<Organization> orgs = organizationRepository.findByDescription(org.getDescription());

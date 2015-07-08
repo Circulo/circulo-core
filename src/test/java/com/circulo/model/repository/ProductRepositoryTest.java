@@ -15,6 +15,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.*;
+import static com.circulo.util.TestUtil.*;
 
 /**
  * Created by azim on 6/9/15.
@@ -178,64 +179,64 @@ public class ProductRepositoryTest {
         checkProductData(product, productFound);
     }
 
-    private Product createProduct() {
-        Product product = new Product();
+//    private Product createProduct() {
+//        Product product = new Product();
+//
+//        product.setId(UUID.randomUUID().toString());
+//        product.setName("Test Product " + product.getId());
+//        product.setBrand("Test Brand " + product.getId());
+//        product.setCategory(createCategory());
+//        product.setDescription("Test Description " + product.getId());
+//        product.setStatus(ProductStatus.ACTIVE);
+//        product.setSupplier(createSupplier());
+//        product.setTags(Arrays.asList("Test Tag1", "Test Tag2", "Test Tag3"));
+//        product.setVariations(createVariations());
+//
+//        return product;
+//    }
 
-        product.setId(UUID.randomUUID().toString());
-        product.setName("Test Product " + product.getId());
-        product.setBrand("Test Brand " + product.getId());
-        product.setCategory(createCategory());
-        product.setDescription("Test Description " + product.getId());
-        product.setStatus(ProductStatus.ACTIVE);
-        product.setSupplier(createSupplier());
-        product.setTags(Arrays.asList("Test Tag1", "Test Tag2", "Test Tag3"));
-        product.setVariations(createVariations());
+//    private List<Variation> createVariations() {
+//        List<Variation> variations = new ArrayList<>();
+//
+//        for (int i = 0; i < 3; i++) {
+//            Variation variation = new Variation();
+//            variation.setSku("Test SKU " + UUID.randomUUID().toString());
+//            variation.setName("Test Variation Name " + variation.getSku());
+//            variation.setNotes("Test Varation Description" + variation.getSku());
+//            variations.add(variation);
+//        }
+//
+//        return variations;
+//    }
 
-        return product;
-    }
+//    private Category createCategory() {
+//        Category category = new Category();
+//
+//        category.setId(UUID.randomUUID().toString());
+//        category.setName("Test Category " + category.getId());
+//
+//        return category;
+//    }
 
-    private List<Variation> createVariations() {
-        List<Variation> variations = new ArrayList<>();
+//    private Supplier createSupplier() {
+//        Supplier supplier = new Supplier();
+//
+//        supplier.setId(UUID.randomUUID().toString());
+//        supplier.setName("Test Supplier " + supplier.getId());
+//        supplier.setAddress(createAddress());
+//
+//        return supplier;
+//    }
 
-        for (int i = 0; i < 3; i++) {
-            Variation variation = new Variation();
-            variation.setSku("Test SKU " + UUID.randomUUID().toString());
-            variation.setName("Test Variation Name " + variation.getSku());
-            variation.setNotes("Test Varation Description" + variation.getSku());
-            variations.add(variation);
-        }
-
-        return variations;
-    }
-
-    private Category createCategory() {
-        Category category = new Category();
-
-        category.setId(UUID.randomUUID().toString());
-        category.setName("Test Category " + category.getId());
-
-        return category;
-    }
-
-    private Supplier createSupplier() {
-        Supplier supplier = new Supplier();
-
-        supplier.setId(UUID.randomUUID().toString());
-        supplier.setName("Test Supplier " + supplier.getId());
-        supplier.setAddress(createAddress());
-
-        return supplier;
-    }
-
-    private Address createAddress() {
-        Address address = new Address();
-
-        address.setCity("San Francisco");
-        address.setCountry("USA");
-        address.setState("CA");
-        address.setPostalCode("11111");
-        address.setPostalAddress1("Test Postal Address");
-
-        return address;
-    }
+//    private Address createAddress() {
+//        Address address = new Address();
+//
+//        address.setCity("San Francisco");
+//        address.setCountry("USA");
+//        address.setState("CA");
+//        address.setPostalCode("11111");
+//        address.setPostalAddress1("Test Postal Address");
+//
+//        return address;
+//    }
 }
