@@ -57,7 +57,7 @@ public class AssemblyRepositoryTest {
 
         Assert.assertEquals(assembly.getId(), assemblyFound.getId());
         Assert.assertEquals(assembly.getOrganization(), assemblyFound.getOrganization());
-        //Assert.assertEquals(assembly.getStockLocation(), assemblyFound.getStockLocation());
+        Assert.assertEquals(assembly.getStockLocation(), assemblyFound.getStockLocation());
         Assert.assertEquals(assembly.getCreatedAt(), assemblyFound.getCreatedAt());
         Assert.assertEquals(assembly.getUpdatedAt(), assemblyFound.getUpdatedAt());
 
@@ -81,6 +81,7 @@ public class AssemblyRepositoryTest {
     private Assembly createDocuments() {
         Assembly assembly = createAssembly();
         organizationRepository.save(assembly.getOrganization());
+        organizationRepository.save(assembly.getStockLocation().getOrganization());
         stockLocationRepository.save(assembly.getStockLocation());
         assemblyRepository.save(assembly);
         return assembly;
