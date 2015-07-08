@@ -27,9 +27,6 @@ public class Product {
 
     private String description;
 
-    @DBRef
-    private Supplier supplier;
-
     private String brand;
 
     private List<String> tags;
@@ -78,14 +75,6 @@ public class Product {
         this.description = description;
     }
 
-    public Supplier getSupplier() {
-        return supplier;
-    }
-
-    public void setSupplier(Supplier supplier) {
-        this.supplier = supplier;
-    }
-
     public String getBrand() {
         return brand;
     }
@@ -125,7 +114,6 @@ public class Product {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (category != null ? category.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (supplier != null ? supplier.hashCode() : 0);
         result = 31 * result + (brand != null ? brand.hashCode() : 0);
         result = 31 * result + (tags != null ? tags.hashCode() : 0);
         result = 31 * result + (status != null ? status.hashCode() : 0);
@@ -145,7 +133,6 @@ public class Product {
         if (name != null ? !name.equals(product.name) : product.name != null) return false;
         if (category != null ? !category.equals(product.category) : product.category != null) return false;
         if (description != null ? !description.equals(product.description) : product.description != null) return false;
-        if (supplier != null ? !supplier.equals(product.supplier) : product.supplier != null) return false;
         if (brand != null ? !brand.equals(product.brand) : product.brand != null) return false;
         if (tags != null ? !tags.equals(product.tags) : product.tags != null) return false;
         if (status != null ? !status.equals(product.status) : product.status != null) return false;
@@ -162,7 +149,6 @@ public class Product {
                 .add("name", name)
                 .add("category", category)
                 .add("description", description)
-                .add("supplier", supplier)
                 .add("brand", brand)
                 .add("tags", tags)
                 .add("status", status)

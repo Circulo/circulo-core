@@ -15,6 +15,10 @@ public interface StockSummaryRepository extends MongoRepository<StockSummary, St
 
     public List<StockSummary> findByOrganization(Organization organization);
 
+    public List<StockSummary> findByOrganizationOrderByCalculatedAtDesc(Organization organization);
+
     public StockSummary findFirstByOrganization(Organization organization, Sort sort);
+
+    public StockSummary findFirstByOrganizationOrderByCalculatedAtDesc(Organization organization);
 
 }

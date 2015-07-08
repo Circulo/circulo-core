@@ -4,6 +4,8 @@ import com.circulo.model.*;
 import com.circulo.model.repository.StockSummaryRepository;
 import com.circulo.model.repository.StockTransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -12,8 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.circulo.model.StockTransaction.StockTransactionType.COMMITTMENT;
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.summingInt;
+import static java.util.stream.Collectors.*;
 
 /**
  * Created by tfulton on 6/18/15.
@@ -21,6 +22,9 @@ import static java.util.stream.Collectors.summingInt;
 @Service("stockSummaryService")
 public class StockSummaryServiceImpl
         implements StockSummaryService {
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     @Autowired
     private StockSummaryRepository stockSummaryRepository;
@@ -32,14 +36,12 @@ public class StockSummaryServiceImpl
     public StockSummary getCurrentSummary(Organization organization) {
 
         // pull the last stock summary
-        // TODO:  pull the last stock summary by date
-        StockSummary summary = new StockSummary();
+        StockSummary summary = getLatestSummary(organization);
 
         // pull the stock transactions for the org from the last summary calculation date
-        // TODO:  pull the stock transactions by date
-        List<StockTransaction> transactions = stockTransactionRepository.findByOrganization(organization);
+        List<StockTransaction> transactions = getLatestStockTransactions(organization, summary);
 
-        // group the transactions grouped by skuk and transaction type
+        // group the transactions grouped by sku and transaction type
         Map<String, Map<StockTransaction.StockTransactionType, List<StockTransaction>>> transactionSkuMap = transactions.stream()
                 .collect(groupingBy(StockTransaction::getSku,
                         groupingBy(StockTransaction::getType)));
@@ -87,6 +89,23 @@ public class StockSummaryServiceImpl
 
         return summary;
     }
+
+    private StockSummary getLatestSummary(Organization organization) {
+
+        StockSummary summary = stockSummaryRepository.findFirstByOrganizationOrderByCalculatedAtDesc(organization);
+        return summary != null ? summary : new StockSummary();
+    }
+
+    private List<StockTransaction> getLatestStockTransactions(Organization organization, StockSummary summary) {
+
+        if (summary.getCalculatedAt() != null) {
+            return stockTransactionRepository.findByOrganization(organization);
+        }
+        else {
+            return stockTransactionRepository.findByOrganizationAndCreatedAtGreaterThan(organization, summary.getCalculatedAt());
+        }
+    }
+
 
     @Override
     public Map<StockLocation, StockSummary> getCurrentSummaryByLocation(Organization organization) {

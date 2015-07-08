@@ -56,4 +56,29 @@ public class StockSummary {
     public void setCalculatedAt(LocalDateTime calculatedAt) {
         this.calculatedAt = calculatedAt;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        StockSummary summary = (StockSummary) o;
+
+        if (id != null ? !id.equals(summary.id) : summary.id != null) return false;
+        if (organization != null ? !organization.equals(summary.organization) : summary.organization != null)
+            return false;
+        if (stockItemMap != null ? !stockItemMap.equals(summary.stockItemMap) : summary.stockItemMap != null)
+            return false;
+        return !(calculatedAt != null ? !calculatedAt.equals(summary.calculatedAt) : summary.calculatedAt != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (organization != null ? organization.hashCode() : 0);
+        result = 31 * result + (stockItemMap != null ? stockItemMap.hashCode() : 0);
+        result = 31 * result + (calculatedAt != null ? calculatedAt.hashCode() : 0);
+        return result;
+    }
 }
