@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 
-import static com.circulo.util.TestUtil.generateOrg;
+import static com.circulo.util.TestUtil.createOrganization;
 import static com.circulo.util.TestUtil.randomInt;
 import static java.util.stream.Collectors.*;
 
@@ -65,7 +65,7 @@ public class StockSummaryRepositoryTest {
     @Test
     public void testFindByOrgOrdered() {
 
-        Organization testOrg = generateOrg();
+        Organization testOrg = createOrganization();
         organizationRepository.save(testOrg);
 
         // create several summaries manually
@@ -94,7 +94,7 @@ public class StockSummaryRepositoryTest {
     @Test
     public void testFindByOrgAndMaxDate() {
 
-        Organization testOrg = generateOrg();
+        Organization testOrg = createOrganization();
         organizationRepository.save(testOrg);
 
         // create several summaries manually
@@ -123,7 +123,7 @@ public class StockSummaryRepositoryTest {
     @Test
     public void testFindByOrgAndMaxDate2() {
 
-        Organization testOrg = generateOrg();
+        Organization testOrg = createOrganization();
         organizationRepository.save(testOrg);
 
         // create several summaries manually
