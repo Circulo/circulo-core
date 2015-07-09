@@ -56,9 +56,9 @@ public class StockSummaryServiceTest {
 
             Product product = createProduct();
             categoryRepository.save(product.getCategory());
+            productRepository.save(productList);
 
             productList.add(product);
-            productRepository.save(productList);
         }
     }
 
@@ -70,9 +70,100 @@ public class StockSummaryServiceTest {
         organizationRepository.save(testOrg);
 
         // keep track of the test transactions we create
-        List<StockTransaction> stockTransactions = new ArrayList<>();
+        List<StockTransaction> stockTransactions = createTransactions(testOrg, productList);
+        stockTransactions.stream().forEach(tx -> {
+            Assert.assertNotNull(tx.getProductId());
+        });
+
+        // now go get our summary and do some validations
+        StockSummary summary = stockSummaryService.getCurrentSummary(testOrg);
+
+        // group the transactions by sku and calculate the count of items in the sku group
+        Map<String, List<StockTransaction>> transactionsBySku = stockTransactions.stream()
+                .collect(groupingBy(StockTransaction::getSku));
+
+        // validate
+        summary.getStockItemMap().values().forEach(item -> {
+
+            Integer testCount = transactionsBySku.get(item.getSku()).stream()
+                    .mapToInt(StockTransaction::getCount).sum();
+            Assert.assertTrue(item.getOnHand().compareTo(testCount) == 0);
+
+            // make sure products match in the test transactions sku map
+            Map<String, List<StockTransaction>> productSkuMap = transactionsBySku.get(item.getSku()).stream()
+                    .collect(groupingBy(StockTransaction::getProductId));
+            Assert.assertEquals(1, productSkuMap.size());
+            Product testProduct = productRepository.findOne(item.getProductId());
+            Assert.assertEquals(testProduct.getId(), item.getProductId());
+        });
+    }
+
+    @Test
+    public void testCalculateFromLatest() {
+
+        // create a new organization
+        Organization testOrg = createOrganization();
+        organizationRepository.save(testOrg);
+
+        // keep track of the test transactions we create
+        List<StockTransaction> stockTransactions = createTransactions(testOrg, productList);
+
+        // now go get our summary and do some validations
+        StockSummary summary = stockSummaryService.getCurrentSummary(testOrg);
+
+        // group the transactions by sku and calculate the count of items in the sku group
+        Map<String, List<StockTransaction>> transactionsBySku = stockTransactions.stream()
+                .collect(groupingBy(StockTransaction::getSku));
+
+        // validate
+        summary.getStockItemMap().values().forEach(item -> {
+
+            Integer testCount = transactionsBySku.get(item.getSku()).stream()
+                    .mapToInt(StockTransaction::getCount).sum();
+            Assert.assertTrue(item.getOnHand().compareTo(testCount) == 0);
+
+            // make sure products match in the test transactions sku map
+            Map<String, List<StockTransaction>> productSkuMap = transactionsBySku.get(item.getSku()).stream()
+                    .collect(groupingBy(StockTransaction::getProductId));
+            Assert.assertEquals(1, productSkuMap.size());
+            Product testProduct = productRepository.findOne(item.getProductId());
+            Assert.assertEquals(testProduct.getId(), item.getProductId());
+        });
+
+        ///////////////////////////////////////
+        // DO IT AGAIN!!!
+        ///////////////////////////////////////
+
+        // keep track of the test transactions we create
+        List<StockTransaction> newStockTransactions = createTransactions(testOrg, productList);
+
+        // now go get our summary and do some validations
+        StockSummary secondSummary = stockSummaryService.getCurrentSummary(testOrg);
+
+        // group the transactions by sku and calculate the count of items in the sku group
+        Map<String, List<StockTransaction>> newTransactionsBySku = newStockTransactions.stream()
+                .collect(groupingBy(StockTransaction::getSku));
+
+        // validate
+        secondSummary.getStockItemMap().values().forEach(item -> {
+
+            Integer testCount = newTransactionsBySku.get(item.getSku()).stream()
+                    .mapToInt(StockTransaction::getCount).sum();
+            Assert.assertTrue(item.getOnHand().compareTo(testCount) == 0);
+
+            // make sure products match in the test transactions sku map
+            Map<String, List<StockTransaction>> productSkuMap = newTransactionsBySku.get(item.getSku()).stream()
+                    .collect(groupingBy(StockTransaction::getProductId));
+            Assert.assertEquals(1, productSkuMap.size());
+            Product testProduct = productRepository.findOne(item.getProductId());
+            Assert.assertEquals(testProduct.getId(), item.getProductId());
+        });
+    }
+
+    private List<StockTransaction> createTransactions(Organization organization, List<Product> productList) {
 
         // add some stock transaction entries for several products and variations
+        List<StockTransaction> stockTransactions = new ArrayList<>();
         LocalDateTime startTime = LocalDateTime.now(ZoneId.of("UTC"));
         for (Product product : productList) {
             for (Variation variation : product.getVariations()) {
@@ -89,8 +180,8 @@ public class StockSummaryServiceTest {
                     transaction.setLocationFrom(null);
                     transaction.setLocationTo(null);
                     transaction.setNotes(UUID.randomUUID().toString());
-                    transaction.setOrganization(testOrg);
-                    transaction.setProduct(product);
+                    transaction.setOrganization(organization);
+                    transaction.setProductId(product.getId());
                     transaction.setSku(variation.getSku());
                     transaction.setType(StockTransaction.StockTransactionType.PROCUREMENT);
                     transaction.setUnitOfMeasure(UUID.randomUUID().toString());
@@ -103,6 +194,8 @@ public class StockSummaryServiceTest {
 
                     variationTransactions.add(transaction);
                     stockTransactions.add(transaction);
+
+                    startTime = startTime.plusHours(2);
                 }
 
                 // sum the item count using only the terminal operation "sum"
@@ -136,32 +229,6 @@ public class StockSummaryServiceTest {
             }
         }
 
-        StockSummary fromServiceSummary = stockSummaryService.getCurrentSummary(testOrg);
-
-        // group the transactions by sku and calculate the count of items in the sku group
-        Map<String, List<StockTransaction>> transactionsBySku = stockTransactions.stream()
-                .collect(groupingBy(StockTransaction::getSku));
-
-        // validate
-        fromServiceSummary.getStockItemMap().values().forEach(item -> {
-
-            Integer testCount = transactionsBySku.get(item.getSku()).stream()
-                    .mapToInt(StockTransaction::getCount).sum();
-            Assert.assertTrue(item.getOnHand().compareTo(testCount) == 0);
-
-            // make sure products match in the test transactions sku map
-            Map<Product, List<StockTransaction>> productSkuMap = transactionsBySku.get(item.getSku()).stream()
-                    .collect(groupingBy(StockTransaction::getProduct));
-            Assert.assertEquals(1, productSkuMap.size());
-            Product testProduct = productSkuMap.keySet().iterator().next();
-
-
-            Assert.assertEquals(testProduct, item.getProduct());
-        });
-    }
-
-    @Test
-    public void testCalculateFromLatest() {
-
+        return stockTransactions;
     }
 }

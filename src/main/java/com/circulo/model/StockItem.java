@@ -7,7 +7,7 @@ import java.math.BigDecimal;
  */
 public class StockItem {
 
-    private Product product;
+    private String productId;
 
     private String sku;
 
@@ -23,12 +23,12 @@ public class StockItem {
 
     private String notes;
 
-    public Product getProduct() {
-        return product;
+    public String getProductId() {
+        return productId;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setProductId(String productId) {
+        this.productId = productId;
     }
 
     public String getSku() {
