@@ -66,7 +66,7 @@ public class StockSummaryServiceTest {
     public void testCalculateFromZero() {
 
         // create a new organization
-        Organization testOrg = generateOrg();
+        Organization testOrg = createOrganization();
         organizationRepository.save(testOrg);
 
         // keep track of the test transactions we create
