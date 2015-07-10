@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
+import scala.Predef;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -47,8 +48,12 @@ public class StockSummaryServiceImpl
     public StockSummary getCurrentSummary(Organization organization) {
 
         // get the products for this org
-        List<Product> products = productRepository.findByOrganization(organization);
-        products.stream().map(Product::getVariations).flatMap(Variation::getSku).collect(toList())
+        Map<String, Product> skuProductMap = new HashMap<>();
+        productRepository.findByOrganization(organization).stream().forEach(prod -> {
+            prod.getVariations().stream().forEach(var -> {
+                skuProductMap.put(var.getSku(), prod);
+            });
+        });
 
         // pull the last stock summary
         StockSummary summary = getLatestSummary(organization);
@@ -61,17 +66,25 @@ public class StockSummaryServiceImpl
                 .collect(groupingBy(StockTransaction::getSku,
                         groupingBy(StockTransaction::getType)));
 
+        // make sure that each sku has a matching product
+        for (String key : transactionSkuMap.keySet()) {
+            Product prod = skuProductMap.get(key);
+            System.out.println("Was looking for key: " + key);
+//            assert(prod != null);
+        }
+
         // on hand stock changes by sku
         StockSummary newSummary = new StockSummary();
         Map<String, StockItem> stockItemMap = new HashMap<>();
         transactionSkuMap.forEach((sku, map) -> {
 
+            Product prod = skuProductMap.get(sku);
             StockItem item = summary.getStockItemMap().compute(sku, (k, stockItem) -> {
                 if (stockItem != null) {
                     return stockItem;
                 } else {
                     stockItem = new StockItem();
-                    stockItem.setProductId(map.values().stream().findFirst().get().get(0).getProductId());
+                    stockItem.setProduct(prod);
                     stockItem.setSku(sku);
                     return stockItem;
                 }
@@ -107,7 +120,7 @@ public class StockSummaryServiceImpl
         newSummary.setCalculatedAt(DateUtils.getUtcNow());
         stockSummaryRepository.save(newSummary);
 
-        return summary;
+        return newSummary;
     }
 
     private StockSummary getLatestSummary(Organization organization) {
