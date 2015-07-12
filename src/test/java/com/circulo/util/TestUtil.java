@@ -1,10 +1,17 @@
 package com.circulo.util;
 
-import com.circulo.enums.ProductStatus;
+import com.circulo.enums.*;
 import com.circulo.model.*;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
@@ -13,6 +20,8 @@ import java.util.*;
  * Created by tfulton on 6/18/15.
  */
 public class TestUtil {
+
+    private static final Logger logger = LoggerFactory.getLogger(TestUtil.class);
 
     private static final Random random = new Random();
 
@@ -173,5 +182,77 @@ public class TestUtil {
         stockLocation.setName("Test Stock Location Name");
         stockLocation.setDescription("Test Stock Location Description");
         return stockLocation;
+    }
+
+    public static Patient createPatient() {
+        Patient patient = new Patient();
+        patient.setId(UUID.randomUUID().toString());
+        patient.setMember(createMember());
+        patient.setRecommendation(createRecommendation());
+        patient.setApplicationFormFileId(null);
+        patient.setCaregivers(null);
+        return patient;
+    }
+
+    public static Member createMember() {
+        Member member = new Member();
+        member.setFirstName("Test First Name");
+        member.setMiddleInitial("Test Middle Initial");
+        member.setLastName("Test Last Name");
+        member.setAddress(createAddress());
+        member.setGender(Gender.FEMALE);
+        member.setEmail("test@circulo.com");
+        member.setHomePhone("123-456-7890");
+        member.setMobilePhone("012-345-6789");
+        member.setStateID("ABCD1234");
+        member.setAlternateID("ABCD1234");
+        try {
+            member.setDateOfBirth(new SimpleDateFormat("MM/dd/yyyy").parse("01/01/1980"));
+        } catch (Exception ex) {}
+
+
+        member.setAlternateIdFileId(null);
+
+        member.setStateIdFileId(null);
+        return member;
+    }
+
+    public static Caregiver createCaregiver() {
+        Caregiver caregiver = new Caregiver();
+        caregiver.setId(UUID.randomUUID().toString());
+        caregiver.setMember(createMember());
+        caregiver.setApplicationFormFileId(null);
+        return caregiver;
+    }
+
+    public static Recommendation createRecommendation() {
+        Recommendation recommendation = new Recommendation();
+        recommendation.setDoctor(createDoctor());
+        recommendation.setRecommendationFile(null);
+        recommendation.setRecommendationNo("ABC123");
+        try {
+            recommendation.setValidFrom(new SimpleDateFormat("MM/dd/yyyy").parse("01/01/1980"));
+            recommendation.setValidUpto(new SimpleDateFormat("MM/dd/yyyy").parse("01/01/2030"));
+        } catch (Exception ex) {}
+        recommendation.setVerificationProvider(VerificationProvider.CANNASSIST);
+        return recommendation;
+    }
+
+    public static Doctor createDoctor() {
+        Doctor doctor = new Doctor();
+        doctor.setId(UUID.randomUUID().toString());
+        doctor.setAddress(createAddress());
+        doctor.setCategory("Test Doctor Category");
+        doctor.setEmail("doctor@circulo.com");
+        doctor.setFirstName("Test Doctor First Name");
+        doctor.setLastName("Test Doctor Last Name");
+        try {
+            doctor.setLicenseExpirationDate(new SimpleDateFormat("MM/dd/yyyy").parse("01/01/2020"));
+        } catch (Exception ex) {}
+        doctor.setLicenseNo("ABC123");
+        doctor.setLicenseStatus(DoctorLicenseStatus.CURRENT);
+        doctor.setMobilePhone("123-456-7890");
+        doctor.setOfficePhone("012-345-6789");
+        return doctor;
     }
 }
