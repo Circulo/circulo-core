@@ -7,7 +7,6 @@ import com.circulo.model.repository.ProductRepository;
 import com.circulo.model.repository.StockTransactionRepository;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kubek2k.springockito.annotations.SpringockitoContextLoader;
@@ -58,7 +57,7 @@ public class StockSummaryServiceTest {
         organizationRepository.save(organization);
         
         // create some products each with several variations
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 1; i++) {
 
             Product product = createProduct(organization);
             categoryRepository.save(product.getCategory());
@@ -94,7 +93,8 @@ public class StockSummaryServiceTest {
     }
 
     @Test
-    public void testCalculateFromLatest() {
+    public void testAddInventory()
+        throws Exception {
 
         // keep track of the test transactions we create
         List<StockTransaction> stockTransactions = createTransactions(organization, productList);
@@ -102,7 +102,7 @@ public class StockSummaryServiceTest {
         // now go get our summary and do some validations
         StockSummary summary = stockSummaryService.getCurrentSummary(organization);
 
-        // group the transactions by sku and calculate the count of items in the sku group
+        // group the transactions by sku
         Map<String, List<StockTransaction>> transactionsBySku = stockTransactions.stream()
                 .collect(groupingBy(StockTransaction::getSku));
 
@@ -121,6 +121,7 @@ public class StockSummaryServiceTest {
         ///////////////////////////////////////
         // DO IT AGAIN!!!
         ///////////////////////////////////////
+        Thread.sleep(1000);
 
         // keep track of the test transactions we create
         List<StockTransaction> newStockTransactions = createTransactions(organization, productList);
@@ -128,7 +129,8 @@ public class StockSummaryServiceTest {
         // now go get our summary and do some validations
         StockSummary secondSummary = stockSummaryService.getCurrentSummary(organization);
 
-        // group the transactions by sku and calculate the count of items in the sku group
+        // group the transactions by sku
+        newStockTransactions.addAll(stockTransactions);
         Map<String, List<StockTransaction>> newTransactionsBySku = newStockTransactions.stream()
                 .collect(groupingBy(StockTransaction::getSku));
 
@@ -145,6 +147,49 @@ public class StockSummaryServiceTest {
         });
     }
 
+    @Test
+    public void testRemoveInventory()
+            throws Exception {
+
+        // keep track of the test transactions we create
+        List<StockTransaction> stockTransactions = createTransactions(organization, productList);
+
+        // now go get our summary and do some validations
+        StockSummary summary = stockSummaryService.getCurrentSummary(organization);
+
+        // group the transactions by sku
+        Map<String, List<StockTransaction>> transactionsBySku = stockTransactions.stream()
+                .collect(groupingBy(StockTransaction::getSku));
+
+        // validate
+        summary.getStockItemMap().values().forEach(item -> {
+
+            Integer testCount = transactionsBySku.get(item.getSku()).stream()
+                    .mapToInt(StockTransaction::getCount).sum();
+            Assert.assertTrue(item.getOnHand().compareTo(testCount) == 0);
+
+            // make sure products match in the test transactions sku map
+            Assert.assertEquals(getSkuProductMap(organization).get(item.getSku()),
+                    item.getProduct());
+        });
+
+        ///////////////////////////////////////
+        // DO IT AGAIN!!!
+        ///////////////////////////////////////
+        Thread.sleep(1000);
+
+        // create purchase transaction (subtract from inventory)
+        StockTransaction purchaseTx = createPurchase(organization, productList.get(0).getVariations().get(0));
+
+        // now go get our summary and do some validations
+        StockSummary secondSummary = stockSummaryService.getCurrentSummary(organization);
+
+        // validate
+        StockItem item = summary.getStockItemMap().get(purchaseTx.getSku());
+        StockItem updatedItem = secondSummary.getStockItemMap().get(purchaseTx.getSku());
+        Assert.assertTrue(new Integer(item.getOnHand() - purchaseTx.getCount()).compareTo(updatedItem.getOnHand()) == 0);
+    }
+
     private Map<String, Product> getSkuProductMap(Organization organization) {
 
         // get the products for this org
@@ -159,6 +204,28 @@ public class StockSummaryServiceTest {
         return skuProductMap;
     }
 
+    private StockTransaction createPurchase(Organization organization, Variation variation) {
+
+        StockTransaction transaction = new StockTransaction();
+        transaction.setCount(1);
+        transaction.setCreatedAt(LocalDateTime.now(ZoneId.of("UTC")));
+        transaction.setId(UUID.randomUUID().toString());
+        transaction.setLocationFrom(null);
+        transaction.setLocationTo(null);
+        transaction.setNotes(UUID.randomUUID().toString());
+        transaction.setOrganization(organization);
+        transaction.setSku(variation.getSku());
+        transaction.setType(StockTransaction.StockTransactionType.SALE);
+        transaction.setUnitOfMeasure(UUID.randomUUID().toString());
+        transaction.setUnitCost(randomBigDecial(1, 10));
+        transaction.setTax(new BigDecimal(0.8).multiply(transaction.getUnitCost()));
+        transaction.setUserId(UUID.randomUUID().toString());
+        transaction.calculateGrossValue();
+        stockTransactionRepository.save(transaction);
+
+        return transaction;
+    }
+
     private List<StockTransaction> createTransactions(Organization organization, List<Product> productList) {
 
         // add some stock transaction entries for several products and variations
@@ -170,7 +237,8 @@ public class StockSummaryServiceTest {
                 // use the to create summary for this variation
                 List<StockTransaction> variationTransactions = new ArrayList<>();
 
-                int itemCount = randomInt(2, 10);
+//                int itemCount = randomInt(2, 10);
+                int itemCount = 1; //
                 for (int i = 0; i < itemCount; i++) {
                     StockTransaction transaction = new StockTransaction();
                     transaction.setCount(1);
@@ -193,7 +261,7 @@ public class StockSummaryServiceTest {
                     variationTransactions.add(transaction);
                     stockTransactions.add(transaction);
 
-                    startTime = startTime.plusHours(2);
+//                    startTime = startTime.plusHours(2);
                 }
 
                 // sum the item count using only the terminal operation "sum"

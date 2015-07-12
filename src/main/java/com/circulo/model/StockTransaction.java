@@ -44,7 +44,8 @@ public class StockTransaction {
 
     public enum StockTransactionType {
 
-        ADJUSTMENT,
+        ADJUSTMENT_NEGATIVE,
+        ADJUSTMENT_POSITIVE,
         COMMITTMENT,
         PROCUREMENT,
         SALE,

@@ -5,23 +5,17 @@ import com.circulo.model.repository.ProductRepository;
 import com.circulo.model.repository.StockSummaryRepository;
 import com.circulo.model.repository.StockTransactionRepository;
 import com.circulo.util.DateUtils;
-import org.apache.commons.collections.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
-import scala.Predef;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.circulo.model.StockTransaction.StockTransactionType.COMMITTMENT;
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.groupingBy;
 
 /**
  * Created by tfulton on 6/18/15.
@@ -61,22 +55,12 @@ public class StockSummaryServiceImpl
         // pull the stock transactions for the org from the last summary calculation date
         List<StockTransaction> transactions = getLatestStockTransactions(organization, summary);
 
-        // group the transactions grouped by sku and transaction type
-        Map<String, Map<StockTransaction.StockTransactionType, List<StockTransaction>>> transactionSkuMap = transactions.stream()
-                .collect(groupingBy(StockTransaction::getSku,
-                        groupingBy(StockTransaction::getType)));
+        // group the transactions by sku
+        Map<String, List<StockTransaction>> transactionsBySku = transactions.stream()
+                .collect(groupingBy(StockTransaction::getSku));
 
-        // make sure that each sku has a matching product
-        for (String key : transactionSkuMap.keySet()) {
-            Product prod = skuProductMap.get(key);
-            System.out.println("Was looking for key: " + key);
-//            assert(prod != null);
-        }
-
-        // on hand stock changes by sku
-        StockSummary newSummary = new StockSummary();
-        Map<String, StockItem> stockItemMap = new HashMap<>();
-        transactionSkuMap.forEach((sku, map) -> {
+        // iterate through the transaction map and adjust/create stock items where necessary
+        transactionsBySku.forEach((sku, list) -> {
 
             Product prod = skuProductMap.get(sku);
             StockItem item = summary.getStockItemMap().compute(sku, (k, stockItem) -> {
@@ -86,41 +70,49 @@ public class StockSummaryServiceImpl
                     stockItem = new StockItem();
                     stockItem.setProduct(prod);
                     stockItem.setSku(sku);
+                    summary.getStockItemMap().put(sku, stockItem);
                     return stockItem;
                 }
             });
 
-            if (map.containsKey(COMMITTMENT)) {  // determine stock commitments
-                // TODO: should these be time sensitive?
-                // calcuate the committed amounts for the sku
-                List<StockTransaction> commitList = map.get(COMMITTMENT);
-                if (commitList.size() > 0) { // quick check for efficiency
-                    Integer netChange = commitList.stream().mapToInt(StockTransaction::getCount)
-                            .reduce(0, (a, b) -> a + b);
-                    item.setCommitted(item.getCommitted() + netChange);
-                }
-
-                // remove the committed items so its easier to deal with the rest
-                map.remove(COMMITTMENT);
-
-            } else { // determine other changes
-                map.forEach((type, list) -> {
-                    Integer netChange = list.stream().mapToInt(StockTransaction::getCount)
-                            .reduce(0, (a, b) -> a + b);
-                    item.setOnHand(item.getOnHand() + netChange);
-                });
-            }
-
-            stockItemMap.put(sku, item);
+            list.stream().forEach(tx -> {
+                processTransaction(tx, item);
+            });
         });
 
         // set date, id and save
-        newSummary.setOrganization(organization);
-        newSummary.setStockItemMap(stockItemMap);
-        newSummary.setCalculatedAt(DateUtils.getUtcNow());
-        stockSummaryRepository.save(newSummary);
+        summary.setCalculatedAt(DateUtils.getUtcNow());
+        summary.setId(null);
+        stockSummaryRepository.save(summary);
 
-        return newSummary;
+        return summary;
+    }
+
+    private void processTransaction(StockTransaction transaction, StockItem item) {
+
+        switch (transaction.getType()) {
+
+            case ADJUSTMENT_NEGATIVE:
+                item.setOnHand(item.getOnHand() - transaction.getCount());
+                break;
+            case ADJUSTMENT_POSITIVE:
+                item.setOnHand(item.getOnHand() + transaction.getCount());
+                break;
+            case COMMITTMENT:
+                item.setCommitted(item.getCommitted() + transaction.getCount());
+                break;
+            case PROCUREMENT:
+                item.setOnHand(item.getOnHand() + transaction.getCount());
+                break;
+            case SALE:
+                item.setOnHand(item.getOnHand() - transaction.getCount());
+                break;
+            case TRANSFER:
+
+                break;
+            default:
+                throw new IllegalArgumentException("Stock Transaction type not recognized.");
+        }
     }
 
     private StockSummary getLatestSummary(Organization organization) {
@@ -133,8 +125,7 @@ public class StockSummaryServiceImpl
 
         if (summary.getCalculatedAt() == null) {
             return stockTransactionRepository.findByOrganization(organization);
-        }
-        else {
+        } else {
             return stockTransactionRepository.findByOrganizationAndCreatedAtGreaterThan(organization, summary.getCalculatedAt());
         }
     }
