@@ -4,21 +4,13 @@ import com.circulo.enums.Gender;
 import com.circulo.enums.MemberType;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
 /**
  * Created by azim on 6/30/15.
  */
-@Document(collection = "member")
 public class Member {
-
-    @Id
-    private String id;
-
-    private MemberType memberType;
-
     private String firstName;
 
     private String middleInitial;
@@ -41,29 +33,9 @@ public class Member {
 
     private String homePhone;
 
-    private Recommendation recommendation;
-
-    private ObjectId applicationFormFileId;
-
     private ObjectId stateIdFileId;
 
     private ObjectId alternateIdFileId;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public MemberType getMemberType() {
-        return memberType;
-    }
-
-    public void setMemberType(MemberType memberType) {
-        this.memberType = memberType;
-    }
 
     public String getFirstName() {
         return firstName;
@@ -153,22 +125,6 @@ public class Member {
         this.homePhone = homePhone;
     }
 
-    public Recommendation getRecommendation() {
-        return recommendation;
-    }
-
-    public void setRecommendation(Recommendation recommendation) {
-        this.recommendation = recommendation;
-    }
-
-    public ObjectId getApplicationFormFileId() {
-        return applicationFormFileId;
-    }
-
-    public void setApplicationFormFileId(ObjectId applicationFormFileId) {
-        this.applicationFormFileId = applicationFormFileId;
-    }
-
     public ObjectId getStateIdFileId() {
         return stateIdFileId;
     }
@@ -192,8 +148,6 @@ public class Member {
 
         Member member = (Member) o;
 
-        if (id != null ? !id.equals(member.id) : member.id != null) return false;
-        if (memberType != member.memberType) return false;
         if (firstName != null ? !firstName.equals(member.firstName) : member.firstName != null) return false;
         if (middleInitial != null ? !middleInitial.equals(member.middleInitial) : member.middleInitial != null)
             return false;
@@ -206,10 +160,6 @@ public class Member {
         if (address != null ? !address.equals(member.address) : member.address != null) return false;
         if (mobilePhone != null ? !mobilePhone.equals(member.mobilePhone) : member.mobilePhone != null) return false;
         if (homePhone != null ? !homePhone.equals(member.homePhone) : member.homePhone != null) return false;
-        if (recommendation != null ? !recommendation.equals(member.recommendation) : member.recommendation != null)
-            return false;
-        if (applicationFormFileId != null ? !applicationFormFileId.equals(member.applicationFormFileId) : member.applicationFormFileId != null)
-            return false;
         if (stateIdFileId != null ? !stateIdFileId.equals(member.stateIdFileId) : member.stateIdFileId != null)
             return false;
         return !(alternateIdFileId != null ? !alternateIdFileId.equals(member.alternateIdFileId) : member.alternateIdFileId != null);
@@ -218,9 +168,7 @@ public class Member {
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (memberType != null ? memberType.hashCode() : 0);
-        result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
+        int result = firstName != null ? firstName.hashCode() : 0;
         result = 31 * result + (middleInitial != null ? middleInitial.hashCode() : 0);
         result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
         result = 31 * result + (gender != null ? gender.hashCode() : 0);
@@ -231,8 +179,6 @@ public class Member {
         result = 31 * result + (address != null ? address.hashCode() : 0);
         result = 31 * result + (mobilePhone != null ? mobilePhone.hashCode() : 0);
         result = 31 * result + (homePhone != null ? homePhone.hashCode() : 0);
-        result = 31 * result + (recommendation != null ? recommendation.hashCode() : 0);
-        result = 31 * result + (applicationFormFileId != null ? applicationFormFileId.hashCode() : 0);
         result = 31 * result + (stateIdFileId != null ? stateIdFileId.hashCode() : 0);
         result = 31 * result + (alternateIdFileId != null ? alternateIdFileId.hashCode() : 0);
         return result;

@@ -27,7 +27,7 @@ import java.util.List;
         locations = {"classpath:spring-test-config.xml"})
 public class DoctorRepositoryTest {
 
-    private static final Logger logger = LoggerFactory.getLogger(MemberRepositoryTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(PatientRepositoryTest.class);
 
     @Autowired
     private MongoTemplate mongoTemplate;

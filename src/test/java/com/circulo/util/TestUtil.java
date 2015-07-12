@@ -184,9 +184,18 @@ public class TestUtil {
         return stockLocation;
     }
 
+    public static Patient createPatient() {
+        Patient patient = new Patient();
+        patient.setId(UUID.randomUUID().toString());
+        patient.setMember(createMember());
+        patient.setRecommendation(createRecommendation());
+        patient.setApplicationFormFileId(null);
+        patient.setCaregivers(null);
+        return patient;
+    }
+
     public static Member createMember() {
         Member member = new Member();
-        member.setId(UUID.randomUUID().toString());
         member.setFirstName("Test First Name");
         member.setMiddleInitial("Test Middle Initial");
         member.setLastName("Test Last Name");
@@ -200,13 +209,20 @@ public class TestUtil {
         try {
             member.setDateOfBirth(new SimpleDateFormat("MM/dd/yyyy").parse("01/01/1980"));
         } catch (Exception ex) {}
-        member.setMemberType(MemberType.PATIENT);
-        member.setRecommendation(createRecommendation());
+
 
         member.setAlternateIdFileId(null);
-        member.setApplicationFormFileId(null);
+
         member.setStateIdFileId(null);
         return member;
+    }
+
+    public static Caregiver createCaregiver() {
+        Caregiver caregiver = new Caregiver();
+        caregiver.setId(UUID.randomUUID().toString());
+        caregiver.setMember(createMember());
+        caregiver.setApplicationFormFileId(null);
+        return caregiver;
     }
 
     public static Recommendation createRecommendation() {
