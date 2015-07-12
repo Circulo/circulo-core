@@ -2,8 +2,7 @@ package com.circulo.model;
 
 import com.circulo.enums.Gender;
 import com.circulo.enums.MemberType;
-import com.mongodb.gridfs.GridFSDBFile;
-import com.mongodb.gridfs.GridFSFile;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -44,11 +43,11 @@ public class Member {
 
     private Recommendation recommendation;
 
-    private GridFSDBFile applicationFormFile;
+    private ObjectId applicationFormFileId;
 
-    private GridFSDBFile stateIdFile;
+    private ObjectId stateIdFileId;
 
-    private GridFSDBFile alternateIdFile;
+    private ObjectId alternateIdFileId;
 
     public String getId() {
         return id;
@@ -162,27 +161,80 @@ public class Member {
         this.recommendation = recommendation;
     }
 
-    public GridFSDBFile getApplicationFormFile() {
-        return applicationFormFile;
+    public ObjectId getApplicationFormFileId() {
+        return applicationFormFileId;
     }
 
-    public void setApplicationFormFile(GridFSDBFile applicationFormFile) {
-        this.applicationFormFile = applicationFormFile;
+    public void setApplicationFormFileId(ObjectId applicationFormFileId) {
+        this.applicationFormFileId = applicationFormFileId;
     }
 
-    public GridFSDBFile getStateIdFile() {
-        return stateIdFile;
+    public ObjectId getStateIdFileId() {
+        return stateIdFileId;
     }
 
-    public void setStateIdFile(GridFSDBFile stateIdFile) {
-        this.stateIdFile = stateIdFile;
+    public void setStateIdFileId(ObjectId stateIdFileId) {
+        this.stateIdFileId = stateIdFileId;
     }
 
-    public GridFSDBFile getAlternateIdFile() {
-        return alternateIdFile;
+    public ObjectId getAlternateIdFileId() {
+        return alternateIdFileId;
     }
 
-    public void setAlternateIdFile(GridFSDBFile alternateIdFile) {
-        this.alternateIdFile = alternateIdFile;
+    public void setAlternateIdFileId(ObjectId alternateIdFileId) {
+        this.alternateIdFileId = alternateIdFileId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Member member = (Member) o;
+
+        if (id != null ? !id.equals(member.id) : member.id != null) return false;
+        if (memberType != member.memberType) return false;
+        if (firstName != null ? !firstName.equals(member.firstName) : member.firstName != null) return false;
+        if (middleInitial != null ? !middleInitial.equals(member.middleInitial) : member.middleInitial != null)
+            return false;
+        if (lastName != null ? !lastName.equals(member.lastName) : member.lastName != null) return false;
+        if (gender != member.gender) return false;
+        if (dateOfBirth != null ? !dateOfBirth.equals(member.dateOfBirth) : member.dateOfBirth != null) return false;
+        if (stateID != null ? !stateID.equals(member.stateID) : member.stateID != null) return false;
+        if (alternateID != null ? !alternateID.equals(member.alternateID) : member.alternateID != null) return false;
+        if (email != null ? !email.equals(member.email) : member.email != null) return false;
+        if (address != null ? !address.equals(member.address) : member.address != null) return false;
+        if (mobilePhone != null ? !mobilePhone.equals(member.mobilePhone) : member.mobilePhone != null) return false;
+        if (homePhone != null ? !homePhone.equals(member.homePhone) : member.homePhone != null) return false;
+        if (recommendation != null ? !recommendation.equals(member.recommendation) : member.recommendation != null)
+            return false;
+        if (applicationFormFileId != null ? !applicationFormFileId.equals(member.applicationFormFileId) : member.applicationFormFileId != null)
+            return false;
+        if (stateIdFileId != null ? !stateIdFileId.equals(member.stateIdFileId) : member.stateIdFileId != null)
+            return false;
+        return !(alternateIdFileId != null ? !alternateIdFileId.equals(member.alternateIdFileId) : member.alternateIdFileId != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (memberType != null ? memberType.hashCode() : 0);
+        result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
+        result = 31 * result + (middleInitial != null ? middleInitial.hashCode() : 0);
+        result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
+        result = 31 * result + (gender != null ? gender.hashCode() : 0);
+        result = 31 * result + (dateOfBirth != null ? dateOfBirth.hashCode() : 0);
+        result = 31 * result + (stateID != null ? stateID.hashCode() : 0);
+        result = 31 * result + (alternateID != null ? alternateID.hashCode() : 0);
+        result = 31 * result + (email != null ? email.hashCode() : 0);
+        result = 31 * result + (address != null ? address.hashCode() : 0);
+        result = 31 * result + (mobilePhone != null ? mobilePhone.hashCode() : 0);
+        result = 31 * result + (homePhone != null ? homePhone.hashCode() : 0);
+        result = 31 * result + (recommendation != null ? recommendation.hashCode() : 0);
+        result = 31 * result + (applicationFormFileId != null ? applicationFormFileId.hashCode() : 0);
+        result = 31 * result + (stateIdFileId != null ? stateIdFileId.hashCode() : 0);
+        result = 31 * result + (alternateIdFileId != null ? alternateIdFileId.hashCode() : 0);
+        return result;
     }
 }
