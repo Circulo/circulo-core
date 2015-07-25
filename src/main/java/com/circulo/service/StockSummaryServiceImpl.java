@@ -83,6 +83,7 @@ public class StockSummaryServiceImpl
         // set date, id and save
         summary.setCalculatedAt(DateUtils.getUtcNow());
         summary.setId(null);
+        summary.setOrganization(organization);
         stockSummaryRepository.save(summary);
 
         return summary;

@@ -56,11 +56,7 @@ public class StockItem {
     }
 
     public Integer getAvailable() {
-        return available;
-    }
-
-    public void setAvailable(Integer available) {
-        this.available = available;
+        return this.onHand - this.committed;
     }
 
     public BigDecimal getCost() {

@@ -20,6 +20,7 @@ import java.time.ZoneId;
 import java.util.*;
 
 import static com.circulo.util.TestUtil.*;
+import static com.circulo.model.StockTransaction.StockTransactionType.*;
 import static java.util.stream.Collectors.*;
 
 /**
@@ -190,6 +191,88 @@ public class StockSummaryServiceTest {
         Assert.assertTrue(new Integer(item.getOnHand() - purchaseTx.getCount()).compareTo(updatedItem.getOnHand()) == 0);
     }
 
+    @Test
+    public void testManyTransactions() {
+
+        Product myProduct = productList.get(0);
+        Variation variation = myProduct.getVariations().get(0);
+
+        // ongoing count
+        Integer onHand = 0;
+
+        // create a series of different transactions and check as we go
+        for (int i=0; i < 100; i++) {
+
+            // add an an item count and check
+            StockTransaction transaction = createTransaction(organization, PROCUREMENT, variation.getSku(), 10);
+            onHand = onHand + transaction.getCount();
+            stockTransactionRepository.save(transaction);
+        }
+
+        // get the summary, validate
+        StockSummary summary = stockSummaryService.getCurrentSummary(organization);
+        StockItem stockItem = summary.getStockItemMap().get(variation.getSku());
+        Assert.assertEquals(onHand, stockItem.getOnHand());
+
+        // create a series of different transactions and check as we go
+        for (int i=0; i < 100; i++) {
+
+            // add an an item count and check
+            StockTransaction transaction = createTransaction(organization, SALE, variation.getSku(), 1);
+            onHand = onHand - transaction.getCount();
+            stockTransactionRepository.save(transaction);
+        }
+
+        summary = stockSummaryService.getCurrentSummary(organization);
+        stockItem = summary.getStockItemMap().get(variation.getSku());
+        Assert.assertEquals(onHand, stockItem.getOnHand());
+
+        // create a series of different transactions and check as we go
+        for (int i=0; i < 100; i++) {
+
+            // add an an item count and check
+            StockTransaction transaction = createTransaction(organization, ADJUSTMENT_POSITIVE, variation.getSku(), 3);
+            onHand = onHand + transaction.getCount();
+            stockTransactionRepository.save(transaction);
+        }
+
+        summary = stockSummaryService.getCurrentSummary(organization);
+        stockItem = summary.getStockItemMap().get(variation.getSku());
+        Assert.assertEquals(onHand, stockItem.getOnHand());
+
+        // create a series of different transactions and check as we go
+        for (int i=0; i < 100; i++) {
+
+            // add an an item count and check
+            StockTransaction transaction = createTransaction(organization, ADJUSTMENT_NEGATIVE, variation.getSku(), 5);
+            onHand = onHand - transaction.getCount();
+            stockTransactionRepository.save(transaction);
+        }
+
+        summary = stockSummaryService.getCurrentSummary(organization);
+        stockItem = summary.getStockItemMap().get(variation.getSku());
+        Assert.assertEquals(onHand, stockItem.getOnHand());
+
+        // create a series of different transactions and check as we go
+        Integer committed = 0;
+        for (int i=0; i < 100; i++) {
+
+            // add an an item count and check
+            StockTransaction transaction = createTransaction(organization, COMMITTMENT, variation.getSku(), 2);
+//            onHand = onHand - transaction.getCount();
+            committed = committed + transaction.getCount();
+            stockTransactionRepository.save(transaction);
+        }
+
+        summary = stockSummaryService.getCurrentSummary(organization);
+        stockItem = summary.getStockItemMap().get(variation.getSku());
+        Assert.assertEquals(onHand, stockItem.getOnHand());
+        Assert.assertEquals(committed, stockItem.getCommitted());
+
+        Integer available = onHand - committed;
+        Assert.assertEquals(available, stockItem.getAvailable());
+    }
+
     private Map<String, Product> getSkuProductMap(Organization organization) {
 
         // get the products for this org
@@ -240,28 +323,11 @@ public class StockSummaryServiceTest {
 //                int itemCount = randomInt(2, 10);
                 int itemCount = 1; //
                 for (int i = 0; i < itemCount; i++) {
-                    StockTransaction transaction = new StockTransaction();
-                    transaction.setCount(1);
-                    transaction.setCreatedAt(startTime);
-                    transaction.setId(UUID.randomUUID().toString());
-                    transaction.setLocationFrom(null);
-                    transaction.setLocationTo(null);
-                    transaction.setNotes(UUID.randomUUID().toString());
-                    transaction.setOrganization(organization);
-                    transaction.setSku(variation.getSku());
-                    transaction.setType(StockTransaction.StockTransactionType.PROCUREMENT);
-                    transaction.setUnitOfMeasure(UUID.randomUUID().toString());
-                    transaction.setUnitCost(randomBigDecial(1, 10));
-                    transaction.setTax(new BigDecimal(0.8).multiply(transaction.getUnitCost()));
-                    transaction.setUserId(UUID.randomUUID().toString());
-                    transaction.calculateGrossValue();
-
+                    StockTransaction transaction = createTransaction(organization, PROCUREMENT, variation.getSku(), 1);
                     stockTransactionRepository.save(transaction);
 
                     variationTransactions.add(transaction);
                     stockTransactions.add(transaction);
-
-//                    startTime = startTime.plusHours(2);
                 }
 
                 // sum the item count using only the terminal operation "sum"
@@ -296,5 +362,27 @@ public class StockSummaryServiceTest {
         }
 
         return stockTransactions;
+    }
+
+    private StockTransaction createTransaction(Organization organization, StockTransaction.StockTransactionType type,
+                                               String sku, Integer count) {
+
+        StockTransaction transaction = new StockTransaction();
+        transaction.setCount(count);
+        transaction.setCreatedAt(LocalDateTime.now(ZoneId.of("UTC")));
+        transaction.setId(UUID.randomUUID().toString());
+        transaction.setLocationFrom(null);
+        transaction.setLocationTo(null);
+        transaction.setNotes(UUID.randomUUID().toString());
+        transaction.setOrganization(organization);
+        transaction.setSku(sku);
+        transaction.setType(type);
+        transaction.setUnitOfMeasure(UUID.randomUUID().toString());
+        transaction.setUnitCost(randomBigDecial(1, 10));
+        transaction.setTax(new BigDecimal(0.8).multiply(transaction.getUnitCost()));
+        transaction.setUserId(UUID.randomUUID().toString());
+        transaction.calculateGrossValue();
+
+        return transaction;
     }
 }
