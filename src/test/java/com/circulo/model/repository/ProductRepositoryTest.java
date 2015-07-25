@@ -32,7 +32,7 @@ import static com.circulo.util.TestUtil.createProduct;
         locations = {"classpath:spring-test-config.xml"})
 public class ProductRepositoryTest {
 
-    Logger logger = LoggerFactory.getLogger(ProductRepositoryTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(ProductRepositoryTest.class);
 
     @Autowired
     private MongoTemplate mongoTemplate;
