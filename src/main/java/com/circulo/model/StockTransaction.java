@@ -22,9 +22,6 @@ public class StockTransaction {
 
     private StockTransactionType type;
 
-    @DBRef
-    private Product product;
-
     private String sku;
 
     private Integer count;
@@ -47,7 +44,8 @@ public class StockTransaction {
 
     public enum StockTransactionType {
 
-        ADJUSTMENT,
+        ADJUSTMENT_NEGATIVE,
+        ADJUSTMENT_POSITIVE,
         COMMITTMENT,
         PROCUREMENT,
         SALE,
@@ -85,14 +83,6 @@ public class StockTransaction {
 
     public void setType(StockTransactionType type) {
         this.type = type;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
     }
 
     public String getSku() {

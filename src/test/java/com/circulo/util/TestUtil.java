@@ -38,6 +38,11 @@ public class TestUtil {
     }
 
     public static Product createProduct() {
+        return createProduct(null);
+    }
+
+    public static Product createProduct(Organization organization) {
+
         Product product = new Product();
 
         product.setId(UUID.randomUUID().toString());
@@ -45,6 +50,7 @@ public class TestUtil {
         product.setBrand("Test Brand " + product.getId());
         product.setCategory(createCategory());
         product.setDescription("Test Description " + product.getId());
+        product.setOrganization(organization);
         product.setStatus(ProductStatus.ACTIVE);
         product.setTags(Arrays.asList("Test Tag1", "Test Tag2", "Test Tag3"));
         product.setVariations(createVariations());
