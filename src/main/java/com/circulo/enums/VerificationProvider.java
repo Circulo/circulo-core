@@ -9,12 +9,14 @@ public enum VerificationProvider {
     MEDIBOOK,   // It uses recommendation number
 
     // https://verify.greenlifemedical.com/recommendations
+    // parse the GET response of https://verify.greenlifemedical.com/recommendations?utf8=%E2%9C%93&rec_id=1111111111111111
     GREENLIFE,  // https://github.com/joshuaterrill/greenlife-api
 
     // https://www.mccdirectory.org/services/verify/verification_check.lasso
     MCCDIRECTORY,   // It uses DOB and Driver License/State ID/Password No. to verify
 
     // https://verify.greenlifemedical.com/cannassist
+    // parse the GET response of https://verify.greenlifemedical.com/cannassist?utf8=%E2%9C%93&cannassist_id=111111111111&zip=94704
     CANNASSIST, // It uses ZipCode and recommendation number (CannAssist ID)
 
     // http://www.medicann.com/verification/
