@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.util.ArrayList;
@@ -34,22 +35,16 @@ import java.util.List;
  * Created by azim on 7/27/15.
  */
 @Component("medicannVerificationService")
-public class MedicannVerificationService implements VerificationService {
+public class MedicannVerificationService extends AbstractVerificationService {
 
     private final static Logger logger = LoggerFactory.getLogger(MedicannVerificationService.class);
 
-    public static final int MAX_REDIRECTS = 50;
-
-    public static final String CONTENT_TYPE = "application/x-www-form-urlencoded";
-    public static final String INVALID_ID = "Invalid ID, ID not found in our database.";
-    public static final String PATIENT_ID = "patientID";
-    public static final String MONTH = "month";
-    public static final String DAY = "day";
-    public static final String YEAR = "year";
-
-    //@TODO : Fetch from properties
-    //@Value("${circulo.core.verification.request-timeout}")
-    private int requestTimeout = 5000; // request timeout in ms
+    private static final String CONTENT_TYPE = "application/x-www-form-urlencoded";
+    private static final String INVALID_ID = "Invalid ID, ID not found in our database.";
+    private static final String PATIENT_ID = "patientID";
+    private static final String MONTH = "month";
+    private static final String DAY = "day";
+    private static final String YEAR = "year";
 
     //@TODO : Fetch from properties
     //@Value("${circulo.core.verification.medicann.host}")
@@ -61,34 +56,16 @@ public class MedicannVerificationService implements VerificationService {
 
     @Override
     public boolean verify(Patient patient) throws Exception {
-        RequestConfig defaultRequestConfig = RequestConfig.custom()
-                .setStaleConnectionCheckEnabled(true)
-                .setRedirectsEnabled(true)
-                .setMaxRedirects(MAX_REDIRECTS)
-                .setRelativeRedirectsAllowed(true)
-                .setAuthenticationEnabled(true)
-                .setConnectionRequestTimeout(requestTimeout)
-                .setConnectTimeout(requestTimeout)
-                .setSocketTimeout(requestTimeout)
-                .build();
+        RequestConfig defaultRequestConfig = getRequestConfig();
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(patient.getMember().getDateOfBirth());
-        List<NameValuePair> requestData = new ArrayList<>();
-        requestData.add(new BasicNameValuePair(PATIENT_ID, patient.getRecommendation().getRecommendationNo()));
-        requestData.add(new BasicNameValuePair(MONTH, "" + calendar.get(Calendar.MONTH) + 1));    // Calendar.MONTH is zero-based
-        requestData.add(new BasicNameValuePair(DAY, "" + calendar.get(Calendar.DAY_OF_MONTH)));
-        requestData.add(new BasicNameValuePair(YEAR, "" + calendar.get(Calendar.YEAR)));
-
-
-        final UrlEncodedFormEntity entity = new UrlEncodedFormEntity(requestData);
-        final Header contentTypeHeader = new BasicHeader(HttpHeaders.CONTENT_TYPE,
-                CONTENT_TYPE);
+        final Header contentTypeHeader = new BasicHeader(HttpHeaders.CONTENT_TYPE, CONTENT_TYPE);
         final Header[] headers = {contentTypeHeader};
 
         CloseableHttpClient httpclient = HttpClients.custom()
                 .setDefaultRequestConfig(defaultRequestConfig)
                 .build();
+
+        final UrlEncodedFormEntity entity = getUrlEncodedFormEntity(patient);
 
         try {
             URI uri = new URIBuilder()
@@ -142,6 +119,19 @@ public class MedicannVerificationService implements VerificationService {
             return false;
         }
 
+    }
+
+    private UrlEncodedFormEntity getUrlEncodedFormEntity(Patient patient) throws UnsupportedEncodingException {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(patient.getMember().getDateOfBirth());
+
+        List<NameValuePair> requestData = new ArrayList<>();
+        requestData.add(new BasicNameValuePair(PATIENT_ID, patient.getRecommendation().getRecommendationNo()));
+        requestData.add(new BasicNameValuePair(MONTH, "" + calendar.get(Calendar.MONTH) + 1));    // Calendar.MONTH is zero-based
+        requestData.add(new BasicNameValuePair(DAY, "" + calendar.get(Calendar.DAY_OF_MONTH)));
+        requestData.add(new BasicNameValuePair(YEAR, "" + calendar.get(Calendar.YEAR)));
+
+        return new UrlEncodedFormEntity(requestData);
     }
 
     private String getResult(String htmlResponse) {

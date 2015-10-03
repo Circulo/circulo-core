@@ -4,7 +4,7 @@ package com.circulo.enums;
  * Created by azim on 6/30/15.
  */
 // http://signup.verification420.com/
-    // Verification420, Greenlife, MCC Directory, Sona Patel MD, MediCann
+// Verification420, Greenlife, MCC Directory, Sona Patel MD, MediCann
 public enum VerificationProvider {
     MEDIBOOK,   // It uses recommendation number
 
@@ -19,11 +19,13 @@ public enum VerificationProvider {
     // parse the GET response of https://verify.greenlifemedical.com/cannassist?utf8=%E2%9C%93&cannassist_id=111111111111&zip=94704
     CANNASSIST, // It uses ZipCode and recommendation number (CannAssist ID)
 
-    // http://www.medicann.com/verification/
+    // http://www.dicann.com/verification/
     // http://www.medicann.com/verification/verify.php
     MEDICANN,   // It used DOB and recommendation number (verification ID)
 
     // http://www.doc420.com/verify/
+    // POST to http://www.doc420.com/wp-admin/sona_ajax.php
+    // Response is a JSON. For invalid chart ID {"status":2}
     SONAPATEL,  // It uses recommendation number (chart ID)
 
     // http://www.calmmp.ca.gov/MMIC_Search.aspx
