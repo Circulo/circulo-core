@@ -55,5 +55,6 @@ libraryDependencies ++= Seq(
   "com.novocode" % "junit-interface" % "0.11" % "test",
   "ch.qos.logback" % "logback-classic" % "1.1.3",
   "org.apache.httpcomponents" % "httpclient" % "4.3.6",
-  "net.sourceforge.htmlcleaner" % "htmlcleaner" % "2.13"
+  "net.sourceforge.htmlcleaner" % "htmlcleaner" % "2.13",
+  "org.jsoup" % "jsoup" % "1.8.3"
 )
